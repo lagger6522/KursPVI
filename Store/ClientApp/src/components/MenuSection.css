@@ -1,0 +1,54 @@
+.menu-section {
+    display: flex;
+    align-items: center;
+    padding: 5px 20px 5px 20px;
+}
+
+.menu-buttons {
+    display: flex;
+    height: 100%;
+}
+
+    .menu-buttons button {
+        background-color: #FFAD4D;
+        border: none;
+        padding: 20px;
+        cursor: pointer;
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    .menu-buttons button:hover {
+        background-color: #FF9519;
+        color: #ffffff;
+    }
+
+        .menu-buttons button:first-child {
+            border-top-left-radius: 15px;
+            border-bottom-left-radius: 15px;
+        }
+
+.search-menu {
+    display: flex;
+    align-items: center;
+    border-radius: 0 15px 15px 0;
+}
+
+    .search-menu input {
+        padding: 20px 70px;
+        border: none;
+        outline: none;
+    }
+
+    .search-menu button {
+        background-color: #FFAD4D;
+        border: none;
+        padding: 20px;
+        cursor: pointer;
+        border-radius: 0 15px 15px 0;
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+        .search-menu button:hover {
+            background-color: #FF9519;
+            color: #ffffff;
+        }

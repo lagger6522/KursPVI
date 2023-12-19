@@ -1,0 +1,31 @@
+/* CartPage.css */
+
+.cart-page {
+    padding: 20px;
+}
+
+.cart-item {
+    border: 1px solid #ddd; /* Серая граница толщиной в миллиметр */
+    margin-bottom: 10px;
+    padding: 10px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+}
+
+    .cart-item span {
+        margin-right: 10px;
+    }
+
+.remove-button {
+    background-color: #ffad4d; /* Оранжевый цвет кнопки */
+    border: 1px solid #ffad4d;
+    color: #fff;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 8px; /* Скругление в восемь градусов */
+}
+
+    .remove-button:hover {
+        background-color: #ff9519; /* Оранжевый цвет кнопки при наведении */
+    }
