@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Store.Domain", "Store.Domai
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DAL", "DAL", "{8D5458CD-2A2B-4F89-9828-DE134B98D121}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Store.DAL", "Store.DAL\Store.DAL.csproj", "{B68A4808-1024-4704-BBA6-D9CA92B66C5F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Store.DAL", "Store.DAL\Store.DAL.csproj", "{B68A4808-1024-4704-BBA6-D9CA92B66C5F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

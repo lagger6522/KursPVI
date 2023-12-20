@@ -33,7 +33,7 @@ export class LoginPage extends Component {
             } else if (data.role === 'Admin') {
                 window.location.href = "/administrator/AdminPage"                
             } else {
-                window.location.href = "/"
+                window.location.href = "/manager/ManagerPage"
             }
         }).catch(error => {
             // Обработка ошибки и обновление состояния errorMessage

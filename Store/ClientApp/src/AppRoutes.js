@@ -4,6 +4,7 @@ import { Home } from "./components/Home";
 import { RegisterPage } from "./components/authentication/RegisterPage";
 import { LoginPage } from "./components/authentication/LoginPage";
 import AdminPage from "./components/administrator/AdminPage";
+import ManagerPage from "./components/manager/ManagerPage";
 import ProductPage from "./components/ProductPage";
 import SubcategoryPage from "./components/SubcategoryPage";
 
@@ -23,6 +24,10 @@ const AppRoutes = [
   {
       path: '/administrator/AdminPage',
       element: <AdminPage />
+  },
+  {
+      path: '/administrator/ManagerPage',
+      element: <ManagerPage />
   },
   {
     path: '/user/UserProfilePage',

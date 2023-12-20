@@ -8,9 +8,6 @@ import CategoryModalContentEdit from './CategoryModalContentEdit';
 import SubcategoryModalContentAdd from './SubcategoryModalContentAdd';
 import SubcategoryModalContentEdit from './SubcategoryModalContentEdit';
 import SubcategoryModalContentRemove from './SubcategoryModalContentRemove';
-import ProductModalContentAdd from './ProductModalContentAdd';
-import ProductModalContentEdit from './ProductModalContentEdit';
-import ProductModalContentRemove from './ProductModalContentRemove';
 import CloseModal from './CloseModal';
 
 const AdminPage = () => {
@@ -46,15 +43,7 @@ const AdminPage = () => {
                         <button onClick={() => openModal(<SubcategoryModalContentEdit />, 'edit')}>Редактировать</button>
                         <button onClick={() => openModal(<SubcategoryModalContentRemove />, 'delete')}>Удалить</button>
                     </>
-                );
-            case 'products':
-                return (
-                    <>
-                        <button onClick={() => openModal(<ProductModalContentAdd />, 'add')}>Добавить</button>
-                        <button onClick={() => openModal(<ProductModalContentEdit />, 'edit')}>Редактировать</button>
-                        <button onClick={() => openModal(<ProductModalContentRemove />, 'delete')}>Удалить</button>
-                    </>
-                );
+                );           
             case 'comments':
                 return (
                     <>
@@ -76,7 +65,6 @@ const AdminPage = () => {
                     {!mode && <button onClick={() => openModal(<CloseModal />, 'comments')}>Комментарии</button>}
                     {!mode && <button onClick={() => openModal(<CloseModal />, 'category')}>Категории</button>}
                     {!mode && <button onClick={() => openModal(<CloseModal />, 'subcategory')}>Под категории</button>}
-                    {!mode && <button onClick={() => openModal(<CloseModal />, 'products')}>Товары</button>}
                     {renderAdminButtons()}
                 </div>
             </div>

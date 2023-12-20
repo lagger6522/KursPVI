@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import sendRequest from '../SendRequest';
 
 
-export class AMLayout extends Component {
-    static displayName = AMLayout.name;
+export class ALayout extends Component {
+    static displayName = ALayout.name;
     constructor(props) {
         super(props);
         this.state = {

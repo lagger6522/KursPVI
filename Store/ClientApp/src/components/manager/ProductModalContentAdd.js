@@ -50,9 +50,6 @@ const ProductModalContentAdd = ({ onClose }) => {
             .then(response => {
                 // Обработка успешного ответа от сервера
                 console.log('Товар успешно создан:', response);
-
-                // Закрытие модального окна
-                onClose();
             })
             .catch(error => {
                 // Обработка ошибки при сохранении товара
