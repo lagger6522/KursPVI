@@ -47,7 +47,7 @@ const BestSellers = () => {
                                 <span>Оценка: {product.rating}</span>
                                 <span>({product.reviews} отзывов)</span>
                             </div>
-                            <div>Цена: {product.price} руб.</div>
+                            <div className="cost">Цена: {product.price} руб.</div>
                             <div className="cart-controls">
                                 <button className="counter-button" onClick={() => handleAddToCart(product.id, -1)}>-</button>
                                 <input type="number" min="1" defaultValue="1" />

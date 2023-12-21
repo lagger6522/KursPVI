@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 import AppRoutes from './AppRoutes';
 import { Layout } from './components/Layout';
 import ProductPage from './components/ProductPage';
+import ProductDetailsPage from './components/ProductDetailsPage';
 import { ALayout } from './components/administrator/ALayout';
 import { MLayout } from './components/manager/MLayout';
 import AdminPage from "./components/administrator/AdminPage";
@@ -16,26 +17,26 @@ export default class App extends Component {
     getPath() {
         return window.location.href.replace(window.location.protocol + "//" + window.location.host, "");
     }
-    
+
     render() {
-        if (this.getPath() === "/administrator/AdminPage") 
+        if (this.getPath() === "/administrator/AdminPage")
             return <ALayout><AdminPage /></ALayout>
         if (this.getPath() === "/manager/ManagerPage") {
             return <MLayout><ManagerPage /></MLayout>
         } else {
-           return (
-            <Layout>
-                <Routes>
-                    {AppRoutes.map((route, index) => {
-                        const { element, ...rest } = route;
-                        return <Route key={index} {...rest} element={element} />;
-                    })}
+            return (
+                <Layout>
+                    <Routes>
+                        {AppRoutes.map((route, index) => {
+                            const { element, ...rest } = route;
+                            return <Route key={index} {...rest} element={element} />;
+                        })}
 
-                    <Route path="/components/ProductPage/:subcategoryId" element={<ProductPage />} />
-                </Routes>
-            </Layout>
-        ); 
+                        <Route path="/products/:subcategoryId" element={<ProductPage />} />
+                        <Route path="/product-details/:productId" element={<ProductDetailsPage />} /> {/* Новый маршрут */}
+                    </Routes>
+                </Layout>
+            );
         }
-        
     }
 }

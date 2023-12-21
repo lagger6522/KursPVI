@@ -8,13 +8,3 @@
     display: flex;
 }
 
-.left-section {
-    display: flex;
-    flex-direction: column;
-    margin-right: 20px;
-}
-
-.right-section {
-    flex: 1;
-    width: 70%;
-}

@@ -2,33 +2,31 @@
     padding: 20px;
 }
 
+.no-line {
+    text-decoration: none;
+    color: black;   
+}
+
 .product-list {
     display: flex;
     flex-wrap: wrap;
 }
 
 .product-item {
+    color: black;
     width: calc(33.33% - 20px);
     margin: 0 10px 20px 0;
     box-sizing: border-box;
     border: 1px solid #ddd;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
     border-radius: 8px;
+    display: flex;
     padding: 10px;
 }
 
-    .product-item img {
-        width: 100%;
-        height: auto;
-        border-radius: 8px;
-    }
-
-    .product-item:hover {
-        border-color: #ff9519;
-    }
-
 .product-details {
-    margin-top: 10px;
+    flex: 1;
+    margin-right: 10px;
 }
 
     .product-details h3 {
@@ -38,6 +36,16 @@
     .product-details span {
         margin-right: 10px;
     }
+
+.product-item img {
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+}
+
+.product-item:hover {
+    border-color: #ff9519;
+}
 
 .cart-controls {
     display: flex;
@@ -101,7 +109,7 @@
     background-color: #fff;
     border: 1px solid #ffad4d;
     color: #ffad4d;
-    margin-left: 150px;
+    margin-left: auto;
     padding: 8px 12px;
     cursor: pointer;
     border-radius: 8px;
@@ -117,3 +125,23 @@
         background-color: #ffad4d;
         color: #fff;
     }
+
+/* Скрываем стрелочки инкремента и декремента в поле ввода типа "number" */
+input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+    margin: 0; /* Убираем внешние отступы */
+}
+
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0; /* Убираем внутренние отступы */
+    }
+
+/* Добавляем стили по вашему усмотрению */
+input[type="number"] {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}

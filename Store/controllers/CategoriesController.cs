@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Store.DAL;
 using Store.Model;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.IO;
 
 
 namespace Store.controllers
@@ -14,6 +17,49 @@ namespace Store.controllers
 		{
 			_context = context;
 		}
+
+		[HttpPost]
+		public async Task<IActionResult> AddReview(ProductReview review)
+		{
+			try
+			{				
+				// Задаем дату отзыва
+				review.ReviewDate = DateTime.Now;
+
+				// Добавляем отзыв в базу данных
+				_context.ProductReviews.Add(review);
+				await _context.SaveChangesAsync();
+
+				return Ok("Отзыв успешно добавлен.");
+			}
+			catch (Exception ex)
+			{
+				// Обработка ошибок, если необходимо
+				return StatusCode(500, $"Внутренняя ошибка сервера: {ex.Message}");
+			}
+		}
+
+		[HttpGet]		
+		public IActionResult GetProductDetails(int productId)
+		{
+			try
+			{
+				var product = _context.Products
+					.FirstOrDefault(p => p.ProductId == productId);
+
+				if (product == null)
+				{
+					return NotFound(new { message = "Товар не найден." });
+				}
+
+				return Ok(product);
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, new { message = $"Ошибка при получении деталей товара: {ex.Message}" });
+			}
+		}
+
 
 		[HttpDelete]
 		public IActionResult RemoveProduct(int productId)
@@ -59,7 +105,6 @@ namespace Store.controllers
 				product.Description = model.Description;
 				product.Image = model.Image;
 				product.Price = model.Price;
-				product.Availability = model.Availability;
 				// Сохранение изменений в базе данных
 				_context.SaveChanges();
 
@@ -199,20 +244,32 @@ namespace Store.controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> CreateProduct([FromBody] Product product)
+		public async Task<IActionResult> CreateProduct(
+			[FromForm] string productName, [FromForm] string description, [FromForm] decimal price, [FromForm] int subcategoryId, [FromForm] IFormFile? image)
 		{
 			try
 			{
-				// Добавление нового товара
+
+				Product product = new Product();
+				product.ProductName = productName;
+				product.Description = description;
+				product.Price = price;
+				product.SubcategoryId = subcategoryId;
+				product.Image = $"/images/{image.FileName}";
+				using (Stream fileStream = new FileStream("ClientApp/public" + product.Image, FileMode.Create))
+				{
+					await image.CopyToAsync(fileStream);
+				}
 				_context.Products.Add(product);
 				await _context.SaveChangesAsync();
+
 
 				return Ok(new { message = "Товар успешно создан." });
 			}
 			catch (Exception ex)
 			{
 				// Обработка ошибок
-				return StatusCode(500, new { message = $"Ошибка при создании товара: {ex.Message}" });
+				return Problem($"Ошибка при создании товара: {ex.Message}");
 			}
 		}
 

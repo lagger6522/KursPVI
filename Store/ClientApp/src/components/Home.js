@@ -6,9 +6,10 @@ import './Home.css';
 export class Home extends Component {
     static displayName = Home.name;
 
+
     
 
-    render() {
+    render() {        
         const images = ['url-to-image-1', 'url-to-image-2', 'url-to-image-3'];
 
         return (

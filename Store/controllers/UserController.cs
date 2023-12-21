@@ -22,6 +22,7 @@ namespace Store.controllers
 		{
 			_context = context;
 		}
+
 		[Authorize]
 		[HttpGet]
 		public IActionResult Check()
@@ -51,36 +52,30 @@ namespace Store.controllers
 				return Unauthorized(new { message = "Неправильные email или пароль." });
 			}
 
-			// Генерация токена (здесь используется пример, в реальных проектах используйте библиотеки для JWT)
 			var token = GenerateToken(user);
 			
 			ClaimsIdentity identity = new ClaimsIdentity(new Claim[]
 			{
 				new Claim(ClaimTypes.Name, user.Username),
 				new Claim(ClaimTypes.Role, user.Role),
-				// Другие необходимые клеймы
 			},
 			CookieAuthenticationDefaults.AuthenticationScheme);
 			ClaimsPrincipal principal = new ClaimsPrincipal(identity);
 			await HttpContext.SignInAsync(
 			  CookieAuthenticationDefaults.AuthenticationScheme, principal);
-			// Возвращение токена клиенту
-			return Ok(new { token, role = user.Role });
+			return Ok(new { token, role = user.Role, number = user.Number, email = user.Email, userName = user.Username, userId = user.UserId });
 		}
 
 		private string GenerateToken(User user)
 		{
-			// Ваш код для генерации токена, например, с использованием библиотеки JWT
-			// Пример использования библиотеки System.IdentityModel.Tokens.Jwt:
 			var tokenHandler = new JwtSecurityTokenHandler();
-			var key = Encoding.ASCII.GetBytes("YourSecretKeyHere"); // Замените на ваш секретный ключ
+			var key = Encoding.ASCII.GetBytes("SecretKey-%#93506930222F#R%");
 			var tokenDescriptor = new SecurityTokenDescriptor
 			{
 				Subject = new ClaimsIdentity(new Claim[]
 				{
 					new Claim(ClaimTypes.Name, user.Username),
 					new Claim(ClaimTypes.Role, user.Role),
-					// Другие необходимые клеймы
 				}),
 				Expires = DateTime.UtcNow.AddDays(1), // Время жизни токена
 				SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

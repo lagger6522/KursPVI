@@ -40,7 +40,7 @@ const ManagerPage = () => {
     return (
         <div className="admin-page">
             <div className="admin-menu">
-                <h2>Панель администратора</h2>
+                <h2>Панель менеджера</h2>
                 <div className="admin-menu-button">
                     {!mode && <button onClick={() => openModal(<CloseModal />, 'products')}>Товары</button>}
                     {renderAdminButtons()}

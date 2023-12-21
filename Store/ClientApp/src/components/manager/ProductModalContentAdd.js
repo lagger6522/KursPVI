@@ -6,8 +6,8 @@ const ProductModalContentAdd = ({ onClose }) => {
     const [productName, setProductName] = useState('');
     const [description, setDescription] = useState('');
     const [image, setImage] = useState('');
+    const [selectedImage, setFile] = useState('');
     const [price, setPrice] = useState('');
-    const [availability, setAvailability] = useState('');
     const [subcategories, setSubcategories] = useState([]);
     const [selectedSubcategoryId, setSelectedSubcategoryId] = useState('');
 
@@ -28,34 +28,24 @@ const ProductModalContentAdd = ({ onClose }) => {
         if (selectedImage) {
             const imageURL = URL.createObjectURL(selectedImage);
             setImage(imageURL);
+            setFile(selectedImage);
         }
     };
-
-    const handleSave = () => {
-        // Проверка, что подкатегория выбрана
-        if (!selectedSubcategoryId) {
-            console.error('Не выбрана подкатегория.');
-            return;
+    const uploadImage = () => {
+        if (selectedImage) {
+            let form = new FormData();
+            form.append("productName", productName);
+            form.append("description", description);
+            form.append("image", selectedImage);
+            form.append("price", price);
+            form.append("subcategoryId", selectedSubcategoryId);
+            sendRequest("/api/Categories/CreateProduct", "POST", form, null)
+                .then(response => {
+                    console.log('Товар успешно создан:', response);
+                })
+                .catch(e => console.log(e));
         }
-
-        // Отправка запроса на сервер для сохранения товара
-        sendRequest('/api/Categories/CreateProduct', 'POST', {
-            productName,
-            description,
-            image,
-            price,
-            availability,
-            subcategoryId: selectedSubcategoryId,
-        })
-            .then(response => {
-                // Обработка успешного ответа от сервера
-                console.log('Товар успешно создан:', response);
-            })
-            .catch(error => {
-                // Обработка ошибки при сохранении товара
-                console.error('Ошибка при создании товара:', error);
-            });
-    };
+    }
 
     return (
         <div className="product-modal-content">
@@ -92,13 +82,6 @@ const ProductModalContentAdd = ({ onClose }) => {
                 id="price"
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
-            />
-            <label htmlFor="availability">Наличие:</label>
-            <input
-                type="text"
-                id="availability"
-                value={availability}
-                onChange={(e) => setAvailability(e.target.value)}
             />            
             <label htmlFor="subcategory">Подкатегория:</label>
             <select
@@ -113,7 +96,7 @@ const ProductModalContentAdd = ({ onClose }) => {
                     </option>
                 ))}
             </select>
-            <button onClick={handleSave}>Сохранить</button>
+            <button onClick={uploadImage}>Сохранить</button>
         </div>
     );
 };

@@ -3,6 +3,7 @@ import TopSection from './TopSection';
 import MenuSection from './MenuSection';
 import CategoryList from './CategoryList';
 import sendRequest from './SendRequest';
+import './Layout.css';
 
 
 export class Layout extends Component {

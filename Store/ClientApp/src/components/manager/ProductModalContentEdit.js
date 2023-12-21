@@ -11,7 +11,6 @@ const ProductModalContentEdit = ({ onClose }) => {
     const [description, setDescription] = useState('');
     const [image, setImage] = useState('');
     const [price, setPrice] = useState('');
-    const [availability, setAvailability] = useState('');
 
     useEffect(() => {
         // Загрузка списка подкатегорий при монтировании компонента
@@ -48,7 +47,6 @@ const ProductModalContentEdit = ({ onClose }) => {
             setDescription(selectedProduct.description || '');
             setImage(selectedProduct.image || '');
             setPrice(selectedProduct.price || '');
-            setAvailability(selectedProduct.availability || '');
         }
     };
 
@@ -74,7 +72,6 @@ const ProductModalContentEdit = ({ onClose }) => {
             description,
             image,
             price,
-            availability,
         },
             { productId: selectedProductId })
             .then(response => {
@@ -164,13 +161,6 @@ const ProductModalContentEdit = ({ onClose }) => {
                         id="price"
                         value={price}
                         onChange={(e) => setPrice(e.target.value)}
-                    />
-                    <label htmlFor="availability">Наличие:</label>
-                    <input
-                        type="text"
-                        id="availability"
-                        value={availability}
-                        onChange={(e) => setAvailability(e.target.value)}
                     />
                 </div>
             )}

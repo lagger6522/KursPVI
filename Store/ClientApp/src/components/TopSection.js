@@ -19,15 +19,24 @@ class TopSection extends React.Component {
 
     singOut() {
         sendRequest("/api/User/singOut", "Post", null)
-            .then(n => {this.setState({ user: null, }) }).catch(e => console.error(e))
+            .then(n => {
+                this.setState({
+                    user: null,
+                })
+                sessionStorage.removeItem("email");
+                sessionStorage.removeItem("number");
+                sessionStorage.removeItem("userName");
+                sessionStorage.removeItem("role");
+                sessionStorage.removeItem("isAuthenticated");
+            }).catch(e => console.error(e))
     }
 
     render() {
         return (
             <div className="top-section">
-                <div className="logo">
-                    <img src="/images/qq.png" alt="Your Logo" />
-                </div>
+                <Link className="logo" to="/"> 
+                    <img src="/images/qq.png"/>
+                </Link>
                 <div className="phone-numbers">
                     <div>А1: +375 29 666 66 66</div>                   
                 </div>

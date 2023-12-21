@@ -22,21 +22,24 @@ export class LoginPage extends Component {
 
         const { email, password } = this.state;
 
-        //sendRequest("/api/User/Login", "POST", { email, password }, null)
-        //    .then(n => window.location.href = "/").catch(e => console.error(e))
-
         sendRequest("/api/User/Login", "POST", {email, password }, null)
             .then(data => {
+                sessionStorage.setItem("userName", data.userName);
+                sessionStorage.setItem("userId", data.userId);
+                sessionStorage.setItem("number", data.number);
+                sessionStorage.setItem("email", data.email);
+                sessionStorage.setItem("role", data.role);
+                sessionStorage.setItem("isAuthenticated", true);
+
             // Проверка роли и перенаправление
             if (data.role === 'User') {
-                window.location.href = "/"                
+                window.location.href = "/"                  
             } else if (data.role === 'Admin') {
                 window.location.href = "/administrator/AdminPage"                
             } else {
                 window.location.href = "/manager/ManagerPage"
             }
         }).catch(error => {
-            // Обработка ошибки и обновление состояния errorMessage
             this.setState({ errorMessage: error.message || "Произошла ошибка при входе. Пожалуйста, попробуйте снова." });
         });
     }
