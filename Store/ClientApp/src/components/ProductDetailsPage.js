@@ -12,6 +12,7 @@ const ProductDetailsPage = () => {
     const [error, setError] = useState('');
 
 
+
     useEffect(() => {
         sendRequest(`/api/Categories/GetProductDetails`, 'GET', null, { productId })
             .then(response => {
@@ -51,8 +52,7 @@ const ProductDetailsPage = () => {
             userId,
             rating,
             Comment: reviewText
-        })
-            .then(response => {
+        }).then(response => {
                 console.log('Отправка отзыва:', response);
                 setRating(0);
                 setReviewText('');
@@ -61,8 +61,27 @@ const ProductDetailsPage = () => {
             .catch(error => {
                 console.error('Ошибка при отправке отзыва:', error);
             });
+    };
 
+    const handleAddToCart = () => {
+        var userId = sessionStorage.getItem("userId");
+        if (!userId) {
+            setError('Для добавления товара в корзину необходимо войти в систему.');
+            return;
+        }
 
+        sendRequest('/api/Categories/AddToCart', 'POST', {
+            productId,
+            userId,
+            quantity
+        })
+            .then(response => {
+                console.log('Товар добавлен в корзину:', response);
+                setError('');
+            })
+            .catch(error => {
+                console.error('Ошибка при добавлении товара в корзину:', error);
+            });
     };
 
     return (
@@ -82,9 +101,9 @@ const ProductDetailsPage = () => {
                         <button className="counter-button" onClick={() => handleQuantityChange(-1)}>-</button>
                         <input type="number" min="1" value={quantity} readOnly />
                         <button className="counter-button" onClick={() => handleQuantityChange(1)}>+</button>
-                        <button className="cart-button">В корзину</button>
+                        <button className="cart-button" onClick={handleAddToCart}>В корзину</button>
                     </div>
-                </div>
+                </div> 
             </div>
 
             <div className="product-description">

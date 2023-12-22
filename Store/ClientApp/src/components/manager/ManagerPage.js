@@ -31,7 +31,23 @@ const ManagerPage = () => {
                         <button onClick={() => openModal(<ProductModalContentEdit />, 'edit')}>Редактировать</button>
                         <button onClick={() => openModal(<ProductModalContentRemove />, 'delete')}>Удалить</button>
                     </>
-                );            
+                );  
+            case 'orders history':
+                return (
+                    <>
+                        <button onClick={() => openModal(<ProductModalContentAdd />, 'add')}>Добавить</button>
+                        <button onClick={() => openModal(<ProductModalContentEdit />, 'edit')}>Редактировать</button>
+                        <button onClick={() => openModal(<ProductModalContentRemove />, 'delete')}>Удалить</button>
+                    </>
+                );  
+            case 'managing order statuses':
+                return (
+                    <>
+                        <button onClick={() => openModal(<ProductModalContentAdd />, 'add')}>Добавить</button>
+                        <button onClick={() => openModal(<ProductModalContentEdit />, 'edit')}>Редактировать</button>
+                        <button onClick={() => openModal(<ProductModalContentRemove />, 'delete')}>Удалить</button>
+                    </>
+                );  
             default:
                 return null;
         }
@@ -43,6 +59,8 @@ const ManagerPage = () => {
                 <h2>Панель менеджера</h2>
                 <div className="admin-menu-button">
                     {!mode && <button onClick={() => openModal(<CloseModal />, 'products')}>Товары</button>}
+                    {!mode && <button onClick={() => openModal(<CloseModal />, 'orders history')}>История заказо</button>}
+                    {!mode && <button onClick={() => openModal(<CloseModal />, 'managing order statuses')}>Управление статусами заказов</button>}
                     {renderAdminButtons()}
                 </div>
             </div>

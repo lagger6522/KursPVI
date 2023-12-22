@@ -7,8 +7,13 @@ import AdminPage from "./components/administrator/AdminPage";
 import ManagerPage from "./components/manager/ManagerPage";
 import ProductPage from "./components/ProductPage";
 import SubcategoryPage from "./components/SubcategoryPage";
+import CartItem from "./components/user/CartItem";
 
 const AppRoutes = [
+  {
+    path: '/user/CartItem',
+    element: <CartItem />
+  },
   {
     index: true,
     element: <Home />

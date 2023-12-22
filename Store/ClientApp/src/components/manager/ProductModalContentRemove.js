@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import sendRequest from '../SendRequest';
-import './style.css';
+import './ModalContent.css';
+
 
 const ProductModalContentRemove = ({ onClose }) => {
     const [subcategories, setSubcategories] = useState([]);

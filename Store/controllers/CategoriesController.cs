@@ -18,6 +18,70 @@ namespace Store.controllers
 			_context = context;
 		}
 
+		[HttpGet]
+		public async Task<IActionResult> GetCartItems(int userId)
+		{
+			try
+			{
+				// Получаем товары в корзине для указанного пользователя
+				var cartItems = await _context.UserCarts
+					.Where(ci => ci.UserId == userId)
+					.Include(ci => ci.Product)
+					.Select(ci => new
+					{
+						ci.CartId,
+						ci.UserId,
+						ci.ProductId,
+						ci.Quantity,
+						Product = new
+						{
+							ci.Product.ProductId,
+							ci.Product.ProductName,
+							// Добавьте остальные свойства Product, которые вам нужны
+						}
+					})
+					.ToListAsync();
+
+				return Ok(cartItems);
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, $"Произошла ошибка: {ex.Message}");
+			}
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> AddToCart([FromBody] UserCart cartItem)
+		{
+			try
+			{				
+				// Проверяем, существует ли уже запись в корзине для данного товара и пользователя
+				var existingCartItem = await _context.UserCarts
+					.Where(ci => ci.ProductId == cartItem.ProductId && ci.UserId == cartItem.UserId)
+					.FirstOrDefaultAsync();
+
+				if (existingCartItem != null)
+				{
+					// Если запись уже существует, обновляем количество
+					existingCartItem.Quantity += cartItem.Quantity;
+				}
+				else
+				{
+					// Если записи нет, добавляем новую запись в корзину
+					_context.UserCarts.Add(cartItem);
+				}
+
+				// Сохраняем изменения в базе данных
+				await _context.SaveChangesAsync();
+
+				return Ok("Товар успешно добавлен в корзину.");
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, $"Произошла ошибка: {ex.Message}");
+			}
+		}
+
 		[HttpPost]
 		public async Task<IActionResult> AddReview(ProductReview review)
 		{

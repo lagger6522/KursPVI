@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import sendRequest from '../SendRequest';
-import './ProductModalContent.css';
+import './ModalContent.css';
 
 const ProductModalContentAdd = ({ onClose }) => {
     const [productName, setProductName] = useState('');

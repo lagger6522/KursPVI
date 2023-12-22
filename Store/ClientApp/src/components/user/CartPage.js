@@ -1,37 +1,46 @@
-import React, { useState } from 'react';
-import './CartPage.css'
+import React, { useState, useEffect } from 'react';
+import CartItem from './CartItem';
+import sendRequest from '../SendRequest';
+import './CartPage.css';
+
 
 const CartPage = () => {
-    const cartItems = [
-        { id: 1, name: 'Product 1', price: 20.99, quantity: 2 },
-        { id: 2, name: 'Product 2', price: 15.99, quantity: 1 },
-    ];
+    const [cartItems, setCartItems] = useState([]); // Замените на ваш массив товаров в корзине
 
-    const [cart, setCart] = useState(cartItems);
+    const userId = sessionStorage.getItem('userId');
+    if (userId) {
+        sendRequest(`/api/Categories/GetCartItems`, 'GET', null, { userId })
+            .then(response => {
+                setCartItems(response);
+            })
+            .catch(error => {
+                console.error('Ошибка при загрузке товаров в корзине:', error);
+            });
+    }
 
-    // Пример функции для удаления товара из корзины
+    const handleQuantityChange = (productId, newQuantity) => {
+        // Логика изменения количества товара в корзине
+    };
+
     const handleRemoveFromCart = (productId) => {
-        const updatedCart = cart.filter(item => item.id !== productId);
-        setCart(updatedCart);
+        // Логика удаления товара из корзины
     };
 
     return (
-        <div>
+        <div className="cart-page">
             <h2>Корзина</h2>
-            <ul>
-                {cart.map(item => (
-                    <li key={item.id}>
-                        <div>
-                            <span>{item.name}</span>
-                            <span>{item.price} руб. x {item.quantity}</span>
-                            <button onClick={() => handleRemoveFromCart(item.id)}>Удалить</button>
-                        </div>
-                    </li>
+            <div className="cart-items">
+                {cartItems && cartItems.map((item) => (
+                    <CartItem
+                        key={item.productId}
+                        product={item}
+                        quantity={item.quantity}
+                        handleQuantityChange={handleQuantityChange}
+                        handleRemoveFromCart={handleRemoveFromCart}
+                    />
                 ))}
-            </ul>
-            <div>
-                <strong>Итого: {cart.reduce((total, item) => total + item.price * item.quantity, 0)} руб.</strong>
             </div>
+            {/* Добавьте общую сумму, кнопку оформления заказа и другие элементы интерфейса */}
         </div>
     );
 };
