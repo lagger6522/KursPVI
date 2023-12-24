@@ -12,8 +12,28 @@ class TopSection extends React.Component {
         this.singOut = this.singOut.bind(this);
     }
     componentDidMount() {
-        sendRequest("/api/User/Check", "Get", null)
-            .then(n => {this.setState({ user: n, }) }).catch(e => console.error(e))
+        if (sessionStorage.getItem("userId") === null) {
+            sendRequest("/api/User/Check", "Get", null)
+                .then(n => {
+                    this.setState({
+                        user: n,
+                    })
+                    sessionStorage.setItem("userName", n.userName);
+                    sessionStorage.setItem("userId", n.userId);
+                    sessionStorage.setItem("number", n.number);
+                    sessionStorage.setItem("email", n.email);
+                    sessionStorage.setItem("role", n.role);
+                    sessionStorage.setItem("isAuthenticated", true);
+
+                    // Проверка роли и перенаправление
+                    if (n.role === 'Admin') {
+                        window.location.href = "/administrator/AdminPage"
+                    }
+                    if (n.role === 'Manager') {
+                        window.location.href = "/manager/ManagerPage"
+                    }                    
+                }).catch(e => console.error(e))
+        }       
     }
 
 
@@ -23,6 +43,7 @@ class TopSection extends React.Component {
                 this.setState({
                     user: null,
                 })
+                sessionStorage.removeItem("userId");
                 sessionStorage.removeItem("email");
                 sessionStorage.removeItem("number");
                 sessionStorage.removeItem("userName");
@@ -48,7 +69,7 @@ class TopSection extends React.Component {
                     <button className="cart-button-on-top-section">Корзина</button>
                 </Link>
                 
-                {this.state.user && this.state.user.length > 0 ?
+                {sessionStorage.getItem("userId") !== null ?
                 (
                         <div className="auth-buttons">
                             <Link className="text-dark" to="/user/UserProfilePage">

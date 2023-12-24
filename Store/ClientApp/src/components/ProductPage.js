@@ -48,7 +48,7 @@ const ProductPage = () => {
                         </Link>
                         <div className="product-details">
                             <Link className="no-line" to={`/product-details/${product.productId}`}>
-                                <h3>{product.productName}</h3>
+                                <h5>{product.productName}</h5>
                             </Link>
                             <div>
                                 <span>Оценка: {product.rating}</span>

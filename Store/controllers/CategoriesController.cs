@@ -37,7 +37,9 @@ namespace Store.controllers
 						{
 							ci.Product.ProductId,
 							ci.Product.ProductName,
-							// Добавьте остальные свойства Product, которые вам нужны
+							ci.Product.Description,
+							ci.Product.Image,
+							ci.Product.Price,
 						}
 					})
 					.ToListAsync();

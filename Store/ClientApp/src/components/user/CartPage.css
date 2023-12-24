@@ -1,31 +1,29 @@
-/* CartPage.css */
-
-.cart-page {
-    padding: 20px;
-}
-
-.cart-item {
-    border: 1px solid #ddd; /* Серая граница толщиной в миллиметр */
-    margin-bottom: 10px;
-    padding: 10px;
-    box-sizing: border-box;
+.cart-item-header {
     display: flex;
-    justify-content: space-between;
+    font-weight: bold;
+    padding: 10px;
+    border-bottom: 2px solid #333;
+
 }
 
-    .cart-item span {
-        margin-right: 10px;
-    }
-
-.remove-button {
-    background-color: #ffad4d; /* Оранжевый цвет кнопки */
-    border: 1px solid #ffad4d;
-    color: #fff;
-    padding: 8px 12px;
-    cursor: pointer;
-    border-radius: 8px; /* Скругление в восемь градусов */
+.column1 {
+    width: 550px;
+    font-size: 24px;
 }
 
-    .remove-button:hover {
-        background-color: #ff9519; /* Оранжевый цвет кнопки при наведении */
-    }
+.column2 {
+    padding-left: 40px;
+    width: 250px;
+    font-size: 24px;    
+}
+
+.column3 {
+    width: 350px;
+    font-size: 24px;
+    padding-right: 15px;
+}
+
+.column4 {
+    width: 350px;
+    font-size: 24px;
+}

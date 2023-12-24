@@ -31,14 +31,16 @@ export class LoginPage extends Component {
                 sessionStorage.setItem("role", data.role);
                 sessionStorage.setItem("isAuthenticated", true);
 
-            // Проверка роли и перенаправление
-            if (data.role === 'User') {
-                window.location.href = "/"                  
-            } else if (data.role === 'Admin') {
-                window.location.href = "/administrator/AdminPage"                
-            } else {
-                window.location.href = "/manager/ManagerPage"
-            }
+                //await и перенаправление данных корзины    
+
+                // Проверка роли и перенаправление
+                if (data.role === 'User') {
+                    window.location.href = "/"                  
+                } else if (data.role === 'Admin') {
+                    window.location.href = "/administrator/AdminPage"                
+                } else {
+                    window.location.href = "/manager/ManagerPage"
+                }
         }).catch(error => {
             this.setState({ errorMessage: error.message || "Произошла ошибка при входе. Пожалуйста, попробуйте снова." });
         });

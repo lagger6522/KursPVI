@@ -28,9 +28,19 @@ namespace Store.controllers
 		public IActionResult Check()
 		{
 			if (User.Identity == null || !User.Identity.IsAuthenticated) return Problem("Пользователь не авторизован.");
-			var claim = User.Claims.Where(n => n.Type == ClaimTypes.Name || n.Type == ClaimTypes.Role)
-				.Select(n => new { claim = n.Value });
-			return Json(claim);
+			var claim = User.Claims.FirstOrDefault(n => n.Type == "ClaimTypes.UserId");
+			if (claim == null) 
+				return Problem("Пользователь не авторизован.");
+			int UserId = -1;
+			if (int.TryParse(claim.Value, out UserId))
+			{
+				var user = _context.Users.FirstOrDefault(u => u.UserId == UserId);
+				if (user == null) 
+					return Problem("Пользователя не существует");
+				return Ok(new { role = user.Role, number = user.Number, email = user.Email, userName = user.Username, userId = user.UserId });
+			}
+			return Problem("Пользователь не авторизован.");
+
 		}
 		[Authorize]
 		[HttpPost]
@@ -56,7 +66,7 @@ namespace Store.controllers
 			
 			ClaimsIdentity identity = new ClaimsIdentity(new Claim[]
 			{
-				new Claim(ClaimTypes.Name, user.Username),
+				new Claim("ClaimTypes.UserId", user.UserId.ToString()),
 				new Claim(ClaimTypes.Role, user.Role),
 			},
 			CookieAuthenticationDefaults.AuthenticationScheme);
@@ -74,7 +84,7 @@ namespace Store.controllers
 			{
 				Subject = new ClaimsIdentity(new Claim[]
 				{
-					new Claim(ClaimTypes.Name, user.Username),
+				new Claim("ClaimTypes.UserId", user.UserId.ToString()),
 					new Claim(ClaimTypes.Role, user.Role),
 				}),
 				Expires = DateTime.UtcNow.AddDays(1), // Время жизни токена
