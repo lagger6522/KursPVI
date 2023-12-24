@@ -10,8 +10,7 @@ const ProductDetailsPage = () => {
     const [rating, setRating] = useState(0);
     const [reviewText, setReviewText] = useState('');
     const [error, setError] = useState('');
-
-
+    const [reviews, setReviews] = useState([]);
 
     useEffect(() => {
         sendRequest(`/api/Categories/GetProductDetails`, 'GET', null, { productId })
@@ -21,7 +20,16 @@ const ProductDetailsPage = () => {
             .catch(error => {
                 console.error('Ошибка при загрузке деталей товара:', error);
             });
+
+        sendRequest(`/api/Categories/GetProductReviews`, 'GET', null, { productId })
+            .then(response => {
+                setReviews(response);
+            })
+            .catch(error => {
+                console.error('Ошибка при загрузке отзывов о товаре:', error);
+            });
     }, [productId]);
+
 
     if (!product) {
         return <div>Loading...</div>;
@@ -46,18 +54,26 @@ const ProductDetailsPage = () => {
             setError('Чтобы отправить отзыв нужно выбрать оценку и написать отзыв');
             return;
         }
-        
+
         sendRequest('/api/Categories/AddReview', 'POST', null, {
             productId,
             userId,
             rating,
             Comment: reviewText
         }).then(response => {
-                console.log('Отправка отзыва:', response);
-                setRating(0);
-                setReviewText('');
-                setError('');
-            })
+            console.log('Отправка отзыва:', response);
+            setRating(0);
+            setReviewText('');
+            setError('');
+
+            sendRequest(`/api/Categories/GetProductReviews`, 'GET', null, { productId })
+                .then(response => {
+                    setReviews(response);
+                })
+                .catch(error => {
+                    console.error('Ошибка при загрузке отзывов о товаре:', error);
+                });
+        })
             .catch(error => {
                 console.error('Ошибка при отправке отзыва:', error);
             });
@@ -77,12 +93,13 @@ const ProductDetailsPage = () => {
         })
             .then(response => {
                 console.log('Товар добавлен в корзину:', response);
-                setError('');
             })
             .catch(error => {
                 console.error('Ошибка при добавлении товара в корзину:', error);
             });
     };
+
+
 
     return (
         <div className="product-details-page">
@@ -93,8 +110,8 @@ const ProductDetailsPage = () => {
                 <div className="product-details">
                     <h3>{product.productName}</h3>
                     <div>
-                        <span>Оценка: {product.rating}</span>
-                        <span>({product.reviews} отзывов)</span>
+                        <span>Оценка: {product.averageRating.toFixed(1)}</span>
+                        <span>({product.reviewCount} отзывов)</span>
                     </div>
                     <div className="cost">Цена: {product.price} руб.</div>
                     <div className="cart-controls">
@@ -103,7 +120,7 @@ const ProductDetailsPage = () => {
                         <button className="counter-button" onClick={() => handleQuantityChange(1)}>+</button>
                         <button className="cart-button" onClick={handleAddToCart}>В корзину</button>
                     </div>
-                </div> 
+                </div>
             </div>
 
             <div className="product-description">
@@ -137,6 +154,25 @@ const ProductDetailsPage = () => {
                 </button>
                 {error && <div className="error-message">{error}</div>}
             </div>
+            <div className="product-reviews">
+                <h4>Отзывы о товаре</h4>
+                {reviews.length === 0 ? (
+                    <p>Отзывов пока нет</p>
+                ) : (
+                    <ul>
+                        {reviews.map(review => (
+                            <li key={review.reviewId}>
+                                <p>{review.userName}</p>
+                                <p>Дата: {review.reviewDate}</p>
+                                <p>Оценка: {review.rating}</p>
+                                <p>{review.comment}</p>
+                                
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            </div>
+
         </div>
     );
 };

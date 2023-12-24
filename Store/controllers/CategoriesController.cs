@@ -19,6 +19,97 @@ namespace Store.controllers
 		}
 
 		[HttpGet]
+		public async Task<IActionResult> GetProductReviews(int productId)
+		{
+			try
+			{
+				var reviews = await _context.ProductReviews
+					.Where(pr => pr.ProductId == productId)
+					.Include(pr => pr.User)  // Include the User navigation property
+					.Select(pr => new
+					{
+						pr.ReviewId,
+						pr.UserId,
+						UserName = pr.User.Username,  // Include the username in the response
+						pr.Rating,
+						pr.Comment,
+						pr.ReviewDate
+					})
+					.ToListAsync();
+
+				return Ok(reviews);
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, new { message = $"Error getting product reviews: {ex.Message}" });
+			}
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> RemoveCartItem([FromBody] RemoveCartItemRequest request)
+		{
+			try
+			{
+				// Проверяем, что запрос содержит все необходимые данные
+				if (request == null || request.UserId <= 0 || request.ProductId <= 0)
+				{
+					return BadRequest("Некорректный запрос");
+				}
+
+				// Находим товар в корзине для указанного пользователя
+				var cartItem = await _context.UserCarts
+					.FirstOrDefaultAsync(ci => ci.UserId == request.UserId && ci.ProductId == request.ProductId);
+
+				if (cartItem == null)
+				{
+					return NotFound("Товар не найден в корзине");
+				}
+
+				// Удаляем товар из корзины
+				_context.UserCarts.Remove(cartItem);
+				await _context.SaveChangesAsync();
+
+				return Ok("Товар успешно удален из корзины");
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, $"Произошла ошибка: {ex.Message}");
+			}
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> UpdateCartItemQuantity([FromBody] UpdateCartItemQuantityRequest request)
+		{
+			try
+			{
+				// Проверяем, что запрос содержит все необходимые данные
+				if (request == null || request.UserId <= 0 || request.ProductId <= 0 || request.Quantity < 0)
+				{
+					return BadRequest("Некорректный запрос");
+				}
+
+				// Находим товар в корзине для указанного пользователя
+				var cartItem = await _context.UserCarts
+					.FirstOrDefaultAsync(ci => ci.UserId == request.UserId && ci.ProductId == request.ProductId);
+
+				if (cartItem == null)
+				{
+					return NotFound("Товар не найден в корзине");
+				}
+
+				// Обновляем количество товара
+				cartItem.Quantity = request.Quantity;
+				await _context.SaveChangesAsync();
+
+				return Ok("Количество товара в корзине успешно обновлено");
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, $"Произошла ошибка: {ex.Message}");
+			}
+		}
+
+		[HttpGet]
 		public async Task<IActionResult> GetCartItems(int userId)
 		{
 			try
@@ -105,13 +196,30 @@ namespace Store.controllers
 			}
 		}
 
-		[HttpGet]		
+		[HttpGet]
 		public IActionResult GetProductDetails(int productId)
 		{
 			try
 			{
 				var product = _context.Products
-					.FirstOrDefault(p => p.ProductId == productId);
+					.Where(p => p.ProductId == productId)
+					.Select(p => new
+					{
+						p.ProductId,
+						p.ProductName,
+						p.Description,
+						p.Image,
+						p.Price,
+						p.SubcategoryId,
+						AverageRating = p.ProductReviews.Any() ? p.ProductReviews.Average(pr => pr.Rating) : 0,
+						ReviewCount = p.ProductReviews.Count(),
+						Subcategory = new
+						{
+							p.Subcategory.SubcategoryId,
+							p.Subcategory.SubcategoryName
+						}
+					})
+					.FirstOrDefault();
 
 				if (product == null)
 				{

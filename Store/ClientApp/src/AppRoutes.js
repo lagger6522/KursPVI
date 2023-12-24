@@ -8,12 +8,18 @@ import ManagerPage from "./components/manager/ManagerPage";
 import ProductPage from "./components/ProductPage";
 import SubcategoryPage from "./components/SubcategoryPage";
 import CartItem from "./components/user/CartItem";
+import OrderButton from "./components/user/OrderButton";
 
 const AppRoutes = [
   {
     path: '/user/CartItem',
     element: <CartItem />
   },
+  {
+    path: '/user/OrderButton',
+    element: <OrderButton />
+  },
+
   {
     index: true,
     element: <Home />

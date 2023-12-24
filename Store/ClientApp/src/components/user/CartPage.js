@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import CartItem from './CartItem';
+import OrderButton from './OrderButton';
 import sendRequest from '../SendRequest';
 import './CartPage.css';
 
@@ -20,12 +21,55 @@ const CartPage = () => {
         }
     }, [userId]);
 
-    const handleQuantityChange = (productId, newQuantity) => {
-        // Логика изменения количества товара в корзине
+    const handleQuantityChange = async (productId, newQuantity) => {
+        try {
+            // Отправляем запрос на сервер для обновления количества товара
+            await sendRequest(`/api/Categories/UpdateCartItemQuantity`, 'POST', {
+                userId: userId,
+                productId: productId,
+                quantity: newQuantity,
+            });
+
+            // Если запрос успешен, обновляем состояние компонента
+            const updatedCartItems = cartItems.map(item => {
+                if (item.product.productId === productId) {
+                    return {
+                        ...item,
+                        quantity: newQuantity,
+                    };
+                }
+                return item;
+            });
+
+            setCartItems(updatedCartItems);
+        } catch (error) {
+            console.error('Ошибка при обновлении количества товара:', error);
+        }
     };
 
-    const handleRemoveFromCart = (productId) => {
-        // Логика удаления товара из корзины
+
+    const handleRemoveFromCart = async (productId) => {
+        try {
+            // Отправляем запрос на сервер для удаления товара из корзины
+            await sendRequest(`/api/Categories/RemoveCartItem`, 'POST', {
+                userId: userId,
+                productId: productId,
+            });
+
+            // Если запрос успешен, обновляем состояние компонента
+            const updatedCartItems = cartItems.filter(item => item.product.productId !== productId);
+            setCartItems(updatedCartItems);
+
+            // Обновляем данные в localStorage
+            localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
+        } catch (error) {
+            console.error('Ошибка при удалении товара из корзины:', error);
+        }
+    };
+
+    const handleOrderButtonClick = () => {
+        // Логика оформления заказа
+        console.log('Заказ оформлен!');
     };
 
     return (
@@ -48,7 +92,7 @@ const CartPage = () => {
                     />
                 ))}
             </div>
-            {/* Добавьте общую сумму, кнопку оформления заказа и другие элементы интерфейса */}
+            <OrderButton onClick={handleOrderButtonClick} />
         </div>
     );
 };

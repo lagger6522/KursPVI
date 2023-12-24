@@ -32,63 +32,62 @@
 }
 
 .item-column1 {
-    width: 550px;
+    width: 120px;
 }
-    .item-column1 span {
-        font-size: 24px;
-    }
 
 .item-column2 {
+    padding-left: 15px;
     width: 250px;
-    font-size: 34px;
+    font-size: 16px;
 }
 
 .item-column3 {
-    width: 350px;
+    padding-left: 40px;
+    width: 250px;
+    font-size: 24px;
 }
 
-
-.item-column3 {
+.item-column4 {
     display: flex;
     align-items: center;
 }
 
-    .item-column3 button {
+    .item-column4 button {
         background-color: #ffad4d;
         border: 1px solid #ffad4d;
         color: #fff;
         padding: 8px 12px;
         cursor: pointer;
         border-radius: 8px;
-        width: 60px;
-        height: 60px;
-        font-size: 25px;
+        width: 45px;
+        height: 45px;
+        font-size: 26px;
         display: flex;
         align-items: center;
         justify-content: center;
     }
 
-        .item-column3 button:hover {
+        .item-column4 button:hover {
             background-color: #ff9519; /* Оранжевый цвет кнопки при наведении */
             color: #fff;
         }
 
-    .item-column3 .cart-button {
+    .item-column4 .cart-button {
         margin-left: 10px; /* Отступ между кнопкой корзины и счетчиком */
     }
 
-    .item-column3 input {
+    .item-column4 input {
         margin: 5px;
         padding: 8px;
-        width: 60px;
-        height: 60px;
+        width: 40px;
+        height: 40px;
         text-align: center;
         border: 1px solid #ddd;
         border-radius: 8px;
-        font-size: 22px;
+        font-size: 16px;
     }
 
-    .item-column3 .cart-button {
+    .item-column4 .cart-button {
         background-color: #fff; /* Белый фон */
         border: 1px solid #ffad4d; /* Оранжевая граница */
         color: #ffad4d; /* Оранжевый цвет текста */
@@ -104,7 +103,28 @@
         justify-content: center;
     }
 
-        .item-column3 .cart-button:hover {
+        .item-column4 .cart-button:hover {
             background-color: #ffad4d; /* Оранжевый фон при наведении */
             color: #fff; /* Белый цвет текста при наведении */
         }
+
+.item-column5 {
+    padding-left: 90px;
+    width: 250px;
+    font-size: 24px;
+}
+
+.remove-button {
+    cursor: pointer;
+    background-color: #ffad4d;
+    border: 1px solid #ffad4d;
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+    .remove-button:hover {
+        background-color: #ff9519;
+        color: #fff;
+    }

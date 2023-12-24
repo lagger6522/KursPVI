@@ -8,6 +8,8 @@ const ProductPage = () => {
     const [selectedSubcategory, setSelectedSubcategory] = useState(null);
     const [products, setProducts] = useState([]);
     const [quantities, setQuantities] = useState({}); // Состояние для хранения количества каждого товара
+    const [error, setError] = useState('');
+
 
     useEffect(() => {
         if (location.state && location.state.subcategory) {
@@ -33,8 +35,32 @@ const ProductPage = () => {
         setQuantities(initialQuantities);
     };
 
-    const handleQuantityChange = (amount) => {
-        setQuantities(prevQuantity => Math.max(prevQuantity + amount, 1));
+    const handleQuantityChange = (productId, amount) => {
+        setQuantities(prevQuantities => ({
+            ...prevQuantities,
+            [productId]: Math.max(prevQuantities[productId] + amount, 1),
+        }));
+    };
+
+    const handleAddToCart = (productId) => {
+        const quantity = quantities[productId];
+        var userId = sessionStorage.getItem("userId");
+
+        if (!userId) {
+            setError('Для добавления товара в корзину необходимо войти в систему.');
+            return;
+        }
+        sendRequest('/api/Categories/AddToCart', 'POST', {
+            productId,
+            userId,
+            quantity,
+        })
+            .then(response => {
+                console.log('Товар успешно добавлен в корзину:', response);
+            })
+            .catch(error => {
+                console.error('Ошибка при добавлении товара в корзину:', error);
+            });
     };
 
     return (
@@ -59,7 +85,7 @@ const ProductPage = () => {
                                 <button className="counter-button" onClick={() => handleQuantityChange(product.productId, -1)}>-</button>
                                 <input type="number" value={quantities[product.productId]} readOnly />
                                 <button className="counter-button" onClick={() => handleQuantityChange(product.productId, 1)}>+</button>
-                                <button className="cart-button">В корзину</button>
+                                <button className="cart-button" onClick={() => handleAddToCart(product.productId)}>В корзину</button>
                             </div>
                         </div>
                     </div>

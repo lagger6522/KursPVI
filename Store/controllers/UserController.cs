@@ -23,6 +23,27 @@ namespace Store.controllers
 			_context = context;
 		}
 
+		[HttpGet]
+		public async Task<IActionResult> GetUserName(int userId)
+		{
+			try
+			{
+				var user = await _context.Users
+					.FirstOrDefaultAsync(u => u.UserId == userId);
+
+				if (user == null)
+				{
+					return NotFound(new { message = "Пользователь не найден." });
+				}
+
+				return Ok(new { userName = user.Username });
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, new { message = $"Ошибка при получении имени пользователя: {ex.Message}" });
+			}
+		}
+
 		[Authorize]
 		[HttpGet]
 		public IActionResult Check()

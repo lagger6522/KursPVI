@@ -7,7 +7,7 @@
 }
 
 .column1 {
-    width: 550px;
+    width: 370px;
     font-size: 24px;
 }
 
@@ -18,7 +18,7 @@
 }
 
 .column3 {
-    width: 350px;
+    width: 250px;
     font-size: 24px;
     padding-right: 15px;
 }
@@ -27,3 +27,23 @@
     width: 350px;
     font-size: 24px;
 }
+
+.column5 {
+    width: 350px;
+    font-size: 24px;
+}
+
+.order-button {
+    background-color: #ffad4d;
+    border: 1px solid #ffad4d;
+    color: #fff;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 8px;
+    font-size: 16px;
+    margin-top: 20px; /* Регулируйте отступ вверху по вашему усмотрению */
+}
+
+    .order-button:hover {
+        background-color: #ff9519;
+    }

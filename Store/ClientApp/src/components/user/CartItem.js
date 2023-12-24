@@ -8,12 +8,14 @@ const CartItem = ({ product, quantity, handleQuantityChange, handleRemoveFromCar
         <div className="cart-item">
             <div className="item-column1">
                 <img src={product.image} />
-                <span>{product.productName}</span>
             </div>
             <div className="item-column2">
-                <p>{product.price} руб.</p>
+                <span>{product.productName}</span>
             </div>
             <div className="item-column3">
+                <p>{product.price} руб.</p>
+            </div>
+            <div className="item-column4">
                 <button className="counter-button" onClick={() => handleQuantityChange(product.productId, quantity - 1)}>
                     -
                 </button>
@@ -22,18 +24,14 @@ const CartItem = ({ product, quantity, handleQuantityChange, handleRemoveFromCar
                     +
                 </button>
             </div>
-            {/*    <div className="detail">*/}
-            {/*        <span>Количество:</span>*/}
-                    
-            {/*    </div>*/}
-            {/*    <div className="detail">*/}
-            {/*        <span>Сумма:</span>*/}
-            {/*        <p>{total} руб.</p>*/}
-            {/*    </div>*/}
-            {/*</div>*/}
-            {/*<button className="remove-button" onClick={() => handleRemoveFromCart(product.productId)}>*/}
-            {/*    Удалить из корзины*/}
-            {/*</button>*/}
+            <div className="item-column5">
+                <p>{total} руб.</p>
+            </div>
+            <div className="item-column6">
+                <button className="remove-button" onClick={() => handleRemoveFromCart(product.productId)}>
+                    Удалить из корзины
+                </button>
+            </div>
         </div>
     );
 };
