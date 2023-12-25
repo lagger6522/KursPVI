@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './AdminPage.css';
 import Modal from './Modal';
-import CommentsModalContent from './CommentsModalContent';
+import CommentsModalContentRemove from './CommentsModalContentRemove';
 import CategoryModalContentAdd from './CategoryModalContentAdd';
 import CategoryModalContentRemove from './CategoryModalContentRemove';
 import CategoryModalContentEdit from './CategoryModalContentEdit';
@@ -47,9 +47,7 @@ const AdminPage = () => {
             case 'comments':
                 return (
                     <>
-                        <button onClick={() => openModal(<CommentsModalContent />, 'add')}>Добавить</button>
-                        <button onClick={() => openModal(<CommentsModalContent />, 'edit')}>Редактировать</button>
-                        <button onClick={() => openModal(<CommentsModalContent />, 'delete')}>Удалить</button>
+                        <button onClick={() => openModal(<CommentsModalContentRemove />, 'add')}>Удалить</button>
                     </>
                 );
             default:

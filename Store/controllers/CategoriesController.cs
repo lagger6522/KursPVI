@@ -19,6 +19,21 @@ namespace Store.controllers
 		}
 
 		[HttpGet]
+		public IActionResult GetAllComments()
+		{
+			try
+			{
+				// Assuming _context represents your database context
+				var comments = _context.ProductReviews.ToList();
+				return Ok(comments);
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, new { message = $"Ошибка при получении комментариев: {ex.Message}" });
+			}
+		}
+
+		[HttpGet]
 		public async Task<IActionResult> GetProductReviews(int productId)
 		{
 			try
@@ -506,9 +521,31 @@ namespace Store.controllers
 
 
 		[HttpGet]
-		public async Task<IEnumerable<Product>> GetProductsBySubcategory(int subcategoryId)
+		public IActionResult GetProductsBySubcategory(int subcategoryId)
 		{
-			return await _context.Products.Where(p => p.SubcategoryId == subcategoryId).ToListAsync();
+			try
+			{
+				var products = _context.Products
+					.Where(p => p.SubcategoryId == subcategoryId)
+					.Select(p => new
+					{
+						p.ProductId,
+						p.ProductName,
+						p.Description,
+						p.Image,
+						p.Price,
+						p.SubcategoryId,
+						AverageRating = p.ProductReviews.Any() ? p.ProductReviews.Average(pr => pr.Rating) : 0,
+						ReviewCount = p.ProductReviews.Count(),
+					})
+					.ToList();
+
+				return Ok(products);
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, new { message = $"Ошибка при получении товаров по подкатегории: {ex.Message}" });
+			}
 		}
 
 		[HttpGet]

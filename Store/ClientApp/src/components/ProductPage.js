@@ -77,8 +77,8 @@ const ProductPage = () => {
                                 <h5>{product.productName}</h5>
                             </Link>
                             <div>
-                                <span>Оценка: {product.rating}</span>
-                                <span>({product.reviews} отзывов)</span>
+                                <span>Оценка: {product.averageRating.toFixed(1)}</span>
+                                <span>({product.reviewCount} отзывов)</span>
                             </div>
                             <div className="cost">Цена: {product.price} руб.</div>
                             <div className="cart-controls">
