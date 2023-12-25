@@ -14,18 +14,18 @@ const ProductDetailsPage = () => {
 
     useEffect(() => {
         sendRequest(`/api/Categories/GetProductDetails`, 'GET', null, { productId })
-            .then(response => {
+            .then((response) => {
                 setProduct(response);
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error('Ошибка при загрузке деталей товара:', error);
             });
 
         sendRequest(`/api/Categories/GetProductReviews`, 'GET', null, { productId })
-            .then(response => {
-                setReviews(response);
+            .then((response) => {
+                setReviews(response?.reviews || []); // Обновляем состояние отзывов
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error('Ошибка при загрузке отзывов о товаре:', error);
             });
     }, [productId]);
@@ -99,7 +99,16 @@ const ProductDetailsPage = () => {
             });
     };
 
+    const formatReviewDate = (dateString) => {
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
 
+        return `${year}-${month}-${day} ${hours}:${minutes}`;
+    };
 
     return (
         <div className="product-details-page">
@@ -115,13 +124,21 @@ const ProductDetailsPage = () => {
                     </div>
                     <div className="cost">Цена: {product.price} руб.</div>
                     <div className="cart-controls">
-                        <button className="counter-button" onClick={() => handleQuantityChange(-1)}>-</button>
+                        <button className="counter-button" onClick={() => handleQuantityChange(-1)}>
+                            -
+                        </button>
                         <input type="number" min="1" value={quantity} readOnly />
-                        <button className="counter-button" onClick={() => handleQuantityChange(1)}>+</button>
-                        <button className="cart-button" onClick={handleAddToCart}>В корзину</button>
+                        <button className="counter-button" onClick={() => handleQuantityChange(1)}>
+                            +
+                        </button>
+                        <button className="cart-button" onClick={handleAddToCart}>
+                            В корзину
+                        </button>
                     </div>
                 </div>
             </div>
+
+
 
             <div className="product-description">
                 <h2>Описание товара</h2>
@@ -156,22 +173,24 @@ const ProductDetailsPage = () => {
             </div>
             <div className="product-reviews">
                 <h4>Отзывы о товаре</h4>
-                {reviews.length === 0 ? (
-                    <p>Отзывов пока нет</p>
-                ) : (
+                {Array.isArray(reviews) && reviews.length > 0 ? (
                     <ul>
-                        {reviews.map(review => (
-                            <li key={review.reviewId}>
-                                <p>{review.userName}</p>
-                                <p>Дата: {review.reviewDate}</p>
-                                <p>Оценка: {review.rating}</p>
-                                <p>{review.comment}</p>
-                                
-                            </li>
-                        ))}
+                        {reviews
+                            .filter((review) => !review.isDeleted)
+                            .map((review) => (
+                                <li key={review.reviewId}>
+                                    <p>{review.userName}</p>
+                                    <p>Дата: {formatReviewDate(review.reviewDate)}</p>
+                                    <p>Оценка: {review.rating}</p>
+                                    <p>{review.comment}</p>
+                                </li>
+                            ))}
                     </ul>
+                ) : (
+                    <p>Отзывов пока нет</p>
                 )}
             </div>
+
 
         </div>
     );

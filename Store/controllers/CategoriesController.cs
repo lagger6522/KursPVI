@@ -18,13 +18,50 @@ namespace Store.controllers
 			_context = context;
 		}
 
+		[HttpPost]
+		public IActionResult ToggleCommentVisibility(int reviewId, bool isVisible)
+		{
+			try
+			{
+				var comment = _context.ProductReviews.FirstOrDefault(pr => pr.ReviewId == reviewId);
+
+				if (comment == null)
+				{
+					return NotFound(new { message = "Комментарий не найден." });
+				}
+
+				comment.IsDeleted = isVisible;
+				_context.SaveChanges();
+
+				return Ok(new { message = isVisible ? "Комментарий успешно скрыт." : "Комментарий сделан видимым." });
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, new { message = $"Ошибка при изменении видимости комментария: {ex.Message}" });
+			}
+		}
+
 		[HttpGet]
 		public IActionResult GetAllComments()
 		{
 			try
 			{
-				// Assuming _context represents your database context
-				var comments = _context.ProductReviews.ToList();
+				// Получаем все комментарии из базы данных, включая информацию о пользователе
+				var comments = _context.ProductReviews
+					.Include(pr => pr.User) // Загружаем связанную информацию о пользователе
+					.Select(pr => new
+					{
+						pr.ReviewId,
+						pr.ProductId,
+						pr.UserId,
+						pr.Rating,
+						pr.Comment,
+						pr.ReviewDate,
+						pr.IsDeleted,
+						UserName = pr.User.Username // Добавляем информацию о пользователе
+					})
+					.ToList();
+
 				return Ok(comments);
 			}
 			catch (Exception ex)
@@ -32,33 +69,38 @@ namespace Store.controllers
 				return StatusCode(500, new { message = $"Ошибка при получении комментариев: {ex.Message}" });
 			}
 		}
-
 		[HttpGet]
 		public async Task<IActionResult> GetProductReviews(int productId)
 		{
 			try
 			{
 				var reviews = await _context.ProductReviews
-					.Where(pr => pr.ProductId == productId)
-					.Include(pr => pr.User)  // Include the User navigation property
+					.Where(pr => pr.ProductId == productId && !pr.IsDeleted)
+					.Include(pr => pr.User)
 					.Select(pr => new
 					{
 						pr.ReviewId,
 						pr.UserId,
-						UserName = pr.User.Username,  // Include the username in the response
+						UserName = pr.User.Username,
 						pr.Rating,
 						pr.Comment,
-						pr.ReviewDate
+						pr.ReviewDate,
+						pr.IsDeleted
 					})
 					.ToListAsync();
 
-				return Ok(reviews);
+				return Ok(new
+				{
+					Reviews = reviews
+				});
 			}
 			catch (Exception ex)
 			{
 				return StatusCode(500, new { message = $"Error getting product reviews: {ex.Message}" });
 			}
 		}
+
+
 
 		[HttpPost]
 		public async Task<IActionResult> RemoveCartItem([FromBody] RemoveCartItemRequest request)
@@ -212,43 +254,36 @@ namespace Store.controllers
 		}
 
 		[HttpGet]
-		public IActionResult GetProductDetails(int productId)
+		public async Task<IActionResult> GetProductDetails(int productId)
 		{
 			try
 			{
-				var product = _context.Products
+				var product = await _context.Products
 					.Where(p => p.ProductId == productId)
 					.Select(p => new
 					{
 						p.ProductId,
 						p.ProductName,
 						p.Description,
-						p.Image,
 						p.Price,
-						p.SubcategoryId,
-						AverageRating = p.ProductReviews.Any() ? p.ProductReviews.Average(pr => pr.Rating) : 0,
-						ReviewCount = p.ProductReviews.Count(),
-						Subcategory = new
-						{
-							p.Subcategory.SubcategoryId,
-							p.Subcategory.SubcategoryName
-						}
+						AverageRating = p.ProductReviews.Where(pr => !pr.IsDeleted).Average(pr => (double?)pr.Rating) ?? 0,
+						ReviewCount = p.ProductReviews.Count(pr => !pr.IsDeleted),
+						p.Image
 					})
-					.FirstOrDefault();
+					.FirstOrDefaultAsync();
 
 				if (product == null)
 				{
-					return NotFound(new { message = "Товар не найден." });
+					return NotFound(new { message = "Product not found." });
 				}
 
 				return Ok(product);
 			}
 			catch (Exception ex)
 			{
-				return StatusCode(500, new { message = $"Ошибка при получении деталей товара: {ex.Message}" });
+				return StatusCode(500, new { message = $"Error getting product details: {ex.Message}" });
 			}
 		}
-
 
 		[HttpDelete]
 		public IActionResult RemoveProduct(int productId)
@@ -521,32 +556,32 @@ namespace Store.controllers
 
 
 		[HttpGet]
-		public IActionResult GetProductsBySubcategory(int subcategoryId)
+		public async Task<IActionResult> GetProductsBySubcategory(int subcategoryId)
 		{
 			try
 			{
-				var products = _context.Products
+				var products = await _context.Products
 					.Where(p => p.SubcategoryId == subcategoryId)
 					.Select(p => new
 					{
 						p.ProductId,
 						p.ProductName,
 						p.Description,
-						p.Image,
 						p.Price,
-						p.SubcategoryId,
-						AverageRating = p.ProductReviews.Any() ? p.ProductReviews.Average(pr => pr.Rating) : 0,
-						ReviewCount = p.ProductReviews.Count(),
+						AverageRating = p.ProductReviews.Any(pr => !pr.IsDeleted) ? p.ProductReviews.Where(pr => !pr.IsDeleted).Average(pr => pr.Rating) : 0,
+						ReviewCount = p.ProductReviews.Count(pr => !pr.IsDeleted),
+						p.Image
 					})
-					.ToList();
+					.ToListAsync();
 
 				return Ok(products);
 			}
 			catch (Exception ex)
 			{
-				return StatusCode(500, new { message = $"Ошибка при получении товаров по подкатегории: {ex.Message}" });
+				return StatusCode(500, new { message = $"Error getting products by subcategory: {ex.Message}" });
 			}
 		}
+
 
 		[HttpGet]
 		public async Task<IEnumerable<ProductCategory>> GetCategories()
