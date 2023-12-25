@@ -47,7 +47,7 @@ const AdminPage = () => {
             case 'comments':
                 return (
                     <>
-                        <button onClick={() => openModal(<CommentsModalContentRemove />, 'add')}>Удалить</button>
+                        <button onClick={() => openModal(<CommentsModalContentRemove />, 'add')}>Управление комментариями</button>
                     </>
                 );
             default:
@@ -62,7 +62,7 @@ const AdminPage = () => {
                 <div className="admin-menu-button">
                     {!mode && <button onClick={() => openModal(<CloseModal />, 'comments')}>Комментарии</button>}
                     {!mode && <button onClick={() => openModal(<CloseModal />, 'category')}>Категории</button>}
-                    {!mode && <button onClick={() => openModal(<CloseModal />, 'subcategory')}>Под категории</button>}
+                    {!mode && <button onClick={() => openModal(<CloseModal />, 'subcategory')}>Подкатегории</button>}
                     {renderAdminButtons()}
                 </div>
             </div>
