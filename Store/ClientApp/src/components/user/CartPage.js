@@ -23,14 +23,12 @@ const CartPage = () => {
 
     const handleQuantityChange = async (productId, newQuantity) => {
         try {
-            // Отправляем запрос на сервер для обновления количества товара
             await sendRequest(`/api/Categories/UpdateCartItemQuantity`, 'POST', {
                 userId: userId,
                 productId: productId,
                 quantity: newQuantity,
             });
 
-            // Если запрос успешен, обновляем состояние компонента
             const updatedCartItems = cartItems.map(item => {
                 if (item.product.productId === productId) {
                     return {

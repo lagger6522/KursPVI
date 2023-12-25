@@ -121,22 +121,30 @@
         color: #fff;
     }
 
-/* Скрываем стрелочки инкремента и декремента в поле ввода типа "number" */
 input[type="number"] {
     -moz-appearance: textfield;
     appearance: textfield;
-    margin: 0; /* Убираем внешние отступы */
+    margin: 0;
 }
 
     input[type="number"]::-webkit-inner-spin-button,
     input[type="number"]::-webkit-outer-spin-button {
         -webkit-appearance: none;
-        margin: 0; /* Убираем внутренние отступы */
+        margin: 0; 
     }
 
-/* Добавляем стили по вашему усмотрению */
 input[type="number"] {
     padding: 8px;
     border: 1px solid #ddd;
     border-radius: 5px;
+}
+
+label {
+    margin-right: 8px;
+    padding-left:5px;
+}
+
+select {
+    padding: 8px;
+    margin-bottom: 16px;
 }

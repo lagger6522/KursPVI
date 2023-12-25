@@ -9,7 +9,8 @@ const ProductPage = () => {
     const [products, setProducts] = useState([]);
     const [quantities, setQuantities] = useState({});
     const [error, setError] = useState('');
-
+    const [sortOption, setSortOption] = useState('name');
+    const [sortDirection, setSortDirection] = useState('asc');
 
     useEffect(() => {
         if (location.state && location.state.subcategory) {
@@ -18,14 +19,14 @@ const ProductPage = () => {
 
             sendRequest(`/api/Categories/GetProductsBySubcategory`, 'GET', null, { subcategoryId: subcategory.subcategoryId })
                 .then(response => {
-                    setProducts(response);
+                    applySorting(response); // Применяем сортировку сразу после загрузки товаров
                     initializeQuantities(response);
                 })
                 .catch(error => {
                     console.error('Ошибка при загрузке товаров по подкатегории:', error);
                 });
         }
-    }, [location.state]);
+    }, [location.state, sortOption, sortDirection]);
 
     const initializeQuantities = (products) => {
         const initialQuantities = {};
@@ -33,6 +34,30 @@ const ProductPage = () => {
             initialQuantities[product.productId] = 1;
         });
         setQuantities(initialQuantities);
+    };
+
+    const applySorting = (results) => {
+        let sortedResults = [...results];
+
+        switch (sortOption) {
+            case 'name':
+                sortedResults.sort((a, b) => a.productName.localeCompare(b.productName));
+                break;
+            case 'price':
+                sortedResults.sort((a, b) => a.price - b.price);
+                break;
+            case 'rating':
+                sortedResults.sort((a, b) => b.averageRating - a.averageRating);
+                break;
+            default:
+                break;
+        }
+
+        if (sortDirection === 'desc') {
+            sortedResults.reverse();
+        }
+
+        setProducts(sortedResults);
     };
 
     const handleQuantityChange = (productId, amount) => {
@@ -63,8 +88,29 @@ const ProductPage = () => {
             });
     };
 
+    const handleSortChange = (e) => {
+        setSortOption(e.target.value);
+    };
+
+    const handleDirectionChange = (e) => {
+        setSortDirection(e.target.value);
+    };
+
     return (
         <div className="product-page">
+            <div>
+                <label>Сортировка по:</label>
+                <select value={sortOption} onChange={handleSortChange}>
+                    <option value="name">Имени</option>
+                    <option value="price">Цене</option>
+                    <option value="rating">Рейтингу</option>
+                </select>
+                <label>Направление:</label>
+                <select value={sortDirection} onChange={handleDirectionChange}>
+                    <option value="asc">По возрастанию</option>
+                    <option value="desc">По убыванию</option>
+                </select>
+            </div>
             <h2>{selectedSubcategory ? `${selectedSubcategory.subcategoryName}` : 'Выберите подкатегорию'}</h2>
             <div className="product-list">
                 {products.map((product) => (

@@ -1,4 +1,3 @@
-// SearchResultPage.js
 import React, { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import sendRequest from './SendRequest';
@@ -9,14 +8,16 @@ const SearchResultPage = () => {
     const [searchResults, setSearchResults] = useState([]);
     const [quantities, setQuantities] = useState({});
     const [error, setError] = useState('');
+    const [sortOption, setSortOption] = useState('name');
+    const [sortDirection, setSortDirection] = useState('asc');
 
     useEffect(() => {
         if (location.state && location.state.searchResults) {
             const results = location.state.searchResults;
-            setSearchResults(results);
+            applySorting(results);
             initializeQuantities(results);
         }
-    }, [location.state]);
+    }, [location.state, sortOption, sortDirection]);
 
     const initializeQuantities = (results) => {
         const initialQuantities = {};
@@ -24,6 +25,30 @@ const SearchResultPage = () => {
             initialQuantities[result.productId] = 1;
         });
         setQuantities(initialQuantities);
+    };
+
+    const applySorting = (results) => {
+        let sortedResults = [...results];
+
+        switch (sortOption) {
+            case 'name':
+                sortedResults.sort((a, b) => a.productName.localeCompare(b.productName));
+                break;
+            case 'price':
+                sortedResults.sort((a, b) => a.price - b.price);
+                break;
+            case 'rating':
+                sortedResults.sort((a, b) => b.averageRating - a.averageRating);
+                break;
+            default:
+                break;
+        }
+
+        if (sortDirection === 'desc') {
+            sortedResults.reverse();
+        }
+
+        setSearchResults(sortedResults);
     };
 
     const handleQuantityChange = (productId, amount) => {
@@ -54,8 +79,29 @@ const SearchResultPage = () => {
             });
     };
 
+    const handleSortChange = (e) => {
+        setSortOption(e.target.value);
+    };
+
+    const handleDirectionChange = (e) => {
+        setSortDirection(e.target.value);
+    };
+
     return (
         <div className="product-page">
+            <div>
+                <label>Сортировка по:</label>
+                <select value={sortOption} onChange={handleSortChange}>
+                    <option value="name">Имени</option>
+                    <option value="price">Цене</option>
+                    <option value="rating">Рейтингу</option>
+                </select>
+                <label>Направление:</label>
+                <select value={sortDirection} onChange={handleDirectionChange}>
+                    <option value="asc">По возрастанию</option>
+                    <option value="desc">По убыванию</option>
+                </select>
+            </div>
             <h2>Результаты поиска</h2>
             <div className="product-list">
                 {searchResults.map((result) => (
