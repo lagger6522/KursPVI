@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './CartItem.css';
 
 const CartItem = ({ product, quantity, handleQuantityChange, handleRemoveFromCart }) => {
@@ -7,10 +8,14 @@ const CartItem = ({ product, quantity, handleQuantityChange, handleRemoveFromCar
     return (
         <div className="cart-item">
             <div className="item-column1">
-                <img src={product.image} />
+                <Link className="no-line" to={`/product-details/${product.productId}`}>
+                    <img src={product.image} alt={product.productName} />
+                </Link>
             </div>
             <div className="item-column2">
-                <span>{product.productName}</span>
+                <Link className="no-line" to={`/product-details/${product.productId}`}>
+                    <span>{product.productName}</span>
+                </Link>
             </div>
             <div className="item-column3">
                 <p>{product.price} руб.</p>

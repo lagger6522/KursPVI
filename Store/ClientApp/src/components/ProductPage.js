@@ -7,7 +7,7 @@ const ProductPage = () => {
     const location = useLocation();
     const [selectedSubcategory, setSelectedSubcategory] = useState(null);
     const [products, setProducts] = useState([]);
-    const [quantities, setQuantities] = useState({}); // Состояние для хранения количества каждого товара
+    const [quantities, setQuantities] = useState({});
     const [error, setError] = useState('');
 
 
@@ -77,8 +77,8 @@ const ProductPage = () => {
                                 <h5>{product.productName}</h5>
                             </Link>
                             <div>
-                                <span>Оценка: {product.averageRating.toFixed(1)}</span>
-                                <span>({product.reviewCount} отзывов)</span>
+                                <span>Оценка: {product.averageRating !== undefined ? product.averageRating.toFixed(1) : 'Нет оценки'}</span>
+                                <span>({product.reviewCount !== undefined ? product.reviewCount : 0} отзыва(ов))</span>
                             </div>
                             <div className="cost">Цена: {product.price} руб.</div>
                             <div className="cart-controls">

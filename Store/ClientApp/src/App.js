@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import AppRoutes from './AppRoutes';
 import { Layout } from './components/Layout';
+import SearchResultPage from './components/SearchResultPage';
 import ProductPage from './components/ProductPage';
 import ProductDetailsPage from './components/ProductDetailsPage';
 import { ALayout } from './components/administrator/ALayout';
@@ -31,7 +32,7 @@ export default class App extends Component {
                             const { element, ...rest } = route;
                             return <Route key={index} {...rest} element={element} />;
                         })}
-
+                        <Route path="/search-results" element={<SearchResultPage />} />
                         <Route path="/products/:subcategoryId" element={<ProductPage />} />
                         <Route path="/product-details/:productId" element={<ProductDetailsPage />} /> {/* Новый маршрут */}
                     </Routes>

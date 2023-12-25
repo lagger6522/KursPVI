@@ -5,6 +5,12 @@
     border-bottom: 1px solid #ddd;
 }
 
+.no-line {
+    text-decoration: none;
+    color: black;
+}
+
+
     .cart-item img {
         width: 120px;
         height: 120px;
