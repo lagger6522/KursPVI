@@ -52,3 +52,36 @@
             background-color: #FF9519;
             color: #ffffff;
         }
+
+/* Добавляем стили для сообщения */
+.search-empty-message {
+    color: #FFAD4D;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+/* Стили для результатов поиска */
+.search-results {
+    margin-top: 20px;
+}
+
+    .search-results h2 {
+        color: #333;
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+
+    .search-results ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .search-results li {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
