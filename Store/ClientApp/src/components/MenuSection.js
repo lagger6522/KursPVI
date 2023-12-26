@@ -1,6 +1,6 @@
 // MenuSection.js
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate instead of useHistory
+import { useNavigate } from 'react-router-dom'; 
 import sendRequest from './SendRequest';
 import './MenuSection.css';
 

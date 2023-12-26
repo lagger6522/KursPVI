@@ -19,6 +19,81 @@ namespace Store.controllers
 		}
 
 		[HttpPost]
+		public async Task<IActionResult> ClearCart([FromBody] ClearCartModel clearCartModel, int userId)
+		{
+			try
+			{
+				_context.UserCarts.RemoveRange(_context.UserCarts.Where(c => c.UserId == userId));
+				await _context.SaveChangesAsync();
+
+				return Ok(new { message = "Корзина успешно очищена" });
+			}
+			catch (Exception ex)
+			{
+				// Обработка ошибки
+				return StatusCode(500, new { message = ex.Message });
+			}
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> CreateOrder([FromBody] OrderFormModel orderForm, int userId)
+		{
+			try
+			{
+				// Преобразуйте данные из orderForm в модель заказа
+				var order = new Order
+				{
+					UserId = userId,
+					OrderDate = DateTime.Now,
+					Status = "Заказ обрабатывается",
+					DeliveryAddress = BuildDeliveryAddress(orderForm),
+				};
+
+				// Сохраните заказ в базе данных
+				_context.Orders.Add(order);
+				await _context.SaveChangesAsync();
+
+				// Получите OrderID после сохранения заказа
+				var orderId = order.OrderId;
+
+				// Проход по товарам в корзине и добавление их в OrderDetails
+				foreach (var cartItem in _context.UserCarts.Where(c => c.UserId == order.UserId))
+				{
+					var orderDetail = new OrderDetail
+					{
+						OrderId = order.OrderId, // Теперь order.OrderId доступен
+						ProductId = cartItem.ProductId,
+						Quantity = cartItem.Quantity,
+					};
+
+					Console.WriteLine($"Creating OrderDetail: OrderId = {orderDetail.OrderId}, ProductId = {orderDetail.ProductId}, Quantity = {orderDetail.Quantity}");
+
+					_context.OrderDetails.Add(orderDetail);
+				}
+
+				// Очистите корзину пользователя
+				_context.UserCarts.RemoveRange(_context.UserCarts.Where(c => c.UserId == order.UserId));
+
+				await _context.SaveChangesAsync();
+
+				return Ok(new { message = "Заказ успешно создан" });
+			}
+			catch (Exception ex)
+			{
+				// Обработка ошибки
+				return StatusCode(500, new { message = ex.Message });
+			}
+		}
+
+		private string BuildDeliveryAddress(OrderFormModel orderForm)
+		{
+			// Реализуйте логику построения адреса доставки из orderForm
+			// Это может быть различным в зависимости от вашего дизайна базы данных
+			// Например, объединение свойств orderForm в строку
+			return $"{orderForm.City}, {orderForm.Street}, {orderForm.House}, {orderForm.Entrance}, {orderForm.Apartment}";
+		}
+
+		[HttpPost]
 		public IActionResult ToggleCommentVisibility(int reviewId, bool isVisible)
 		{
 			try

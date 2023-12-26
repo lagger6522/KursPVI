@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import CartItem from './CartItem';
 import OrderButton from './OrderButton';
 import sendRequest from '../SendRequest';
@@ -6,7 +7,7 @@ import './CartPage.css';
 
 const CartPage = () => {
     const [cartItems, setCartItems] = useState([]);
-
+    const navigate = useNavigate();
     const userId = sessionStorage.getItem('userId');
 
     useEffect(() => {
@@ -64,10 +65,10 @@ const CartPage = () => {
             console.error('Ошибка при удалении товара из корзины:', error);
         }
     };
-
+        
     const handleOrderButtonClick = () => {
         // Логика оформления заказа
-        console.log('Заказ оформлен!');
+        navigate('/order-form');
     };
 
     return (
