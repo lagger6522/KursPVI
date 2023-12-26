@@ -121,8 +121,10 @@ namespace Store.controllers
 			// Проверка, не существует ли уже пользователь с таким email
 			if (_context.Users.Any(u => u.Email == model.Email))
 			{
+				// Добавьте отладочный вывод, чтобы увидеть, какие email уже существуют
+				Console.WriteLine($"Пользователь с email '{model.Email}' уже существует.");
+
 				ModelState.AddModelError("Email", "Пользователь с таким email уже существует.");
-				//return Json(new { errors = ModelState.ToDictionary(e => e.Key, e => e.Value.Errors.Select(x => x.ErrorMessage)) });
 				return Problem("Пользователь с таким email уже существует.");
 			}
 

@@ -59,10 +59,31 @@ export class RegisterPage extends Component {
 
         // Отправка данных на сервер
         sendRequest("/api/User/Register", "POST", { name, email, phone, password }, null)
-            .then(n => { window.location.href = "/authentication/LoginPage" }).catch(error => {
-                // Обработка ошибки и обновление состояния errorMessage
-                this.setState({ errorMessage: error.message || "Произошла ошибка при входе. Пожалуйста, попробуйте снова." });
+            .then(response => {
+                // Проверка успешного ответа
+                if (response.message) {
+                    // Регистрация успешна, выполните необходимые действия
+                    window.location.href = "/authentication/LoginPage";
+                }
+            })
+            .catch(error => {
+                if (error.response && error.response.data) {
+                    // Вывести сообщение об ошибке на основе ответа сервера
+                    const errorMessage = error.response.data.message || 'Произошла ошибка при входе. Пожалуйста, попробуйте снова.';
+                    this.setState({ errorMessage });
+
+                    // Добавьте условие, чтобы не перенаправлять, если пользователь существует
+                    if (errorMessage !== "Пользователь с таким email уже зарегистрирован.") {
+                        window.location.href = "/authentication/LoginPage";
+                    }
+                } else {
+                    // Обработка других ошибок
+                    console.error('Произошла ошибка при входе:', error);
+                    // Вывести общее сообщение об ошибке
+                    this.setState({ errorMessage: 'Что-то пошло не так, возможно эта почто уже зарегистрированна.' });
+                }
             });
+            
     };  
     GetAllUsers() {
         sendRequest('/api/User/GetUsers', 'GET', null, null).then(n => { console.log(n); this.setState({ Users: n }) });        
