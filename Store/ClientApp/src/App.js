@@ -5,6 +5,7 @@ import { Layout } from './components/Layout';
 import SearchResultPage from './components/SearchResultPage';
 import ProductPage from './components/ProductPage';
 import OrderFormPage from './components/user/OrderFormPage';
+import MyOrdersPage from './components/user/MyOrdersPage';
 import ProductDetailsPage from './components/ProductDetailsPage';
 import { ALayout } from './components/administrator/ALayout';
 import { MLayout } from './components/manager/MLayout';
@@ -33,6 +34,7 @@ export default class App extends Component {
                             const { element, ...rest } = route;
                             return <Route key={index} {...rest} element={element} />;
                         })}
+                        <Route path="/my-orders" element={<MyOrdersPage />} />
                         <Route path="/order-form" element={<OrderFormPage />} />
                         <Route path="/search-results" element={<SearchResultPage />} />
                         <Route path="/products/:subcategoryId" element={<ProductPage />} />

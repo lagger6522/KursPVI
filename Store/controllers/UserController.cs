@@ -24,6 +24,25 @@ namespace Store.controllers
 		}
 
 		[HttpGet]
+		public IActionResult GetOrdersByUserId(int userId)
+		{
+			try
+			{
+				// Получите заказы для указанного userId
+				var orders = _context.Orders
+					.Where(o => o.UserId == userId)
+					.ToList();
+
+				return Ok(orders);
+			}
+			catch (Exception ex)
+			{
+				// Обработка ошибки
+				return StatusCode(500, new { message = ex.Message });
+			}
+		}
+
+		[HttpGet]
 		public async Task<IActionResult> GetUserName(int userId)
 		{
 			try
