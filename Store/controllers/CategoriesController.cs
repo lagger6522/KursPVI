@@ -87,9 +87,6 @@ namespace Store.controllers
 
 		private string BuildDeliveryAddress(OrderFormModel orderForm)
 		{
-			// Реализуйте логику построения адреса доставки из orderForm
-			// Это может быть различным в зависимости от вашего дизайна базы данных
-			// Например, объединение свойств orderForm в строку
 			return $"{orderForm.City}, {orderForm.Street}, {orderForm.House}, {orderForm.Entrance}, {orderForm.Apartment}";
 		}
 
@@ -674,6 +671,70 @@ namespace Store.controllers
 		public async Task<IEnumerable<Product>> GetProducts()
 		{
 			return await _context.Products.ToListAsync();
+		}
+		
+		[HttpGet]
+		public async Task<IEnumerable<Order>> GetAllOrders()
+		{
+			return await _context.Orders.ToListAsync();
+		}
+
+		[HttpPost]
+		public IActionResult UpdateOrderStatus([FromBody] OrderStatusUpdateRequest request)
+		{
+			if (request == null || string.IsNullOrWhiteSpace(request.Status))
+			{
+				return BadRequest("Invalid request.");
+			}
+
+			var order = _context.Orders.FirstOrDefault(o => o.OrderId == request.OrderId);
+
+			if (order != null)
+			{
+				order.Status = request.Status;
+				_context.SaveChanges();
+				return Ok();
+			}
+
+			return NotFound("Order not found");
+		}
+
+		[HttpGet]
+		public IActionResult GetBestSellers()
+		{
+			var bestSellers = _context.ProductReviews
+				.Where(review => !review.IsDeleted)
+				.GroupBy(review => review.ProductId)
+				.Select(group => new
+				{
+					ProductId = group.Key,
+					AverageRating = group.Average(review => review.Rating),
+					TotalReviews = group.Count()
+				})
+				.OrderByDescending(product => product.AverageRating)
+				.Take(3)
+				.ToList();
+
+			var bestSellersData = bestSellers.Select(product => new
+			{
+				Id = product.ProductId,
+				Name = _context.Products
+					.Where(p => p.ProductId == product.ProductId)
+					.Select(p => p.ProductName)
+					.FirstOrDefault(),
+				Image = _context.Products
+					.Where(p => p.ProductId == product.ProductId)
+					.Select(p => p.Image)
+					.FirstOrDefault(),
+				Rating = product.AverageRating,
+				Reviews = product.TotalReviews,
+				Price = _context.Products
+					.Where(p => p.ProductId == product.ProductId)
+					.Select(p => p.Price)
+					.FirstOrDefault(),
+			}).ToList();
+
+			return Ok(bestSellersData);
 		}
 	}
 }

@@ -4,7 +4,13 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import './SliderComponent.css';
 
-const SliderComponent = ({ images }) => {
+const SliderComponent = () => {
+    const images = [
+        '/images/1.jpg',
+        '/images/2.jpg',
+        '/images/4.jpg',
+    ];
+
     const sliderSettings = {
         dots: true,
         infinite: true,
@@ -18,7 +24,7 @@ const SliderComponent = ({ images }) => {
             <Slider {...sliderSettings}>
                 {images.map((image, index) => (
                     <div key={index}>
-                        <img src={image}/>
+                        <img src={image} alt={`Image ${index + 1}`} />
                     </div>
                 ))}
             </Slider>
@@ -27,4 +33,3 @@ const SliderComponent = ({ images }) => {
 };
 
 export default SliderComponent;
-    

@@ -1,36 +1,20 @@
-import React from 'react';
+// BestSellers.jsx
+import React, { useState, useEffect } from 'react';
+import sendRequest from './SendRequest';
 import './BestSellers.css';
 
 const BestSellers = () => {
-    const bestSellersData = [
-        {
-            id: 1,
-            name: 'Товар 1',
-            image: 'url-to-image-1',
-            rating: 4.5,
-            reviews: 10,
-            price: 20.99,
-        },
-        {
-            id: 2,
-            name: 'Товар 2',
-            image: 'url-to-image-2',
-            rating: 4.2,
-            reviews: 8,
-            price: 15.99,
-        },
-        {
-            id: 3,
-            name: 'Товар 3',
-            image: 'url-to-image-2',
-            rating: 4.2,
-            reviews: 8,
-            price: 15.99,
-        },       
-    ];
+    const [bestSellersData, setBestSellersData] = useState([]);
+
+    useEffect(() => {
+        sendRequest('/api/Categories/GetBestSellers', 'GET', null, null)
+            .then(data => {
+                setBestSellersData(data);
+            })
+            .catch(error => console.error('Error fetching best sellers:', error));
+    }, []);
 
     const handleAddToCart = (productId, quantity) => {
-        // Логика добавления товара в корзину
         console.log(`Товар ${productId} добавлен в корзину, количество: ${quantity}`);
     };
 
@@ -53,7 +37,7 @@ const BestSellers = () => {
                                 <input type="number" min="1" defaultValue="1" />
                                 <button className="counter-button" onClick={() => handleAddToCart(product.id, 1)}>+</button>
                                 <button className="cart-button" onClick={() => handleAddToCart(product.id, 1)}>В корзину</button>
-                            </div>                          
+                            </div>
                         </div>
                     </div>
                 ))}

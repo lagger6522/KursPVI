@@ -38,7 +38,7 @@ export default class App extends Component {
                         <Route path="/order-form" element={<OrderFormPage />} />
                         <Route path="/search-results" element={<SearchResultPage />} />
                         <Route path="/products/:subcategoryId" element={<ProductPage />} />
-                        <Route path="/product-details/:productId" element={<ProductDetailsPage />} /> {/* Новый маршрут */}
+                        <Route path="/product-details/:productId" element={<ProductDetailsPage />} />
                     </Routes>
                 </Layout>
             );

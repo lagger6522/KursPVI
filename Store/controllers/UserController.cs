@@ -37,7 +37,6 @@ namespace Store.controllers
 			}
 			catch (Exception ex)
 			{
-				// Обработка ошибки
 				return StatusCode(500, new { message = ex.Message });
 			}
 		}

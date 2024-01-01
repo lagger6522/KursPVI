@@ -23,7 +23,7 @@ const ProductDetailsPage = () => {
 
         sendRequest(`/api/Categories/GetProductReviews`, 'GET', null, { productId })
             .then((response) => {
-                setReviews(response?.reviews || []); // Обновляем состояние отзывов
+                setReviews(response?.reviews || []);
             })
             .catch((error) => {
                 console.error('Ошибка при загрузке отзывов о товаре:', error);
