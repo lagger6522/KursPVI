@@ -12,6 +12,11 @@ const CartPage = () => {
 
     useEffect(() => {
         if (userId) {
+
+            if (!userId) {
+                console.warn('Для просмотра корзины необходимо войти в систему.');
+                return;
+            }
             sendRequest(`/api/Categories/GetCartItems`, 'GET', null, { userId })
                 .then(response => {
                     setCartItems(response);
@@ -80,24 +85,33 @@ const CartPage = () => {
     return (
         <div className="cart-page">
             <h2>Корзина</h2>
-            <div className="cart-items">
-                <div className="cart-item-header">
-                    <p className="column1">Товар</p>
-                    <p className="column2">Цена</p>
-                    <p className="column3">Количество</p>
-                    <p className="column4">Сумма</p>                        
+            {!userId && (
+                <div className="notification">
+                    <p>Для просмотра корзины необходимо войти в систему.</p>
                 </div>
-                {cartItems && cartItems.map((item) => (
-                    <CartItem
-                        key={item.productId}
-                        product={item.product}
-                        quantity={item.quantity}
-                        handleQuantityChange={handleQuantityChange}
-                        handleRemoveFromCart={handleRemoveFromCart}
-                    />
-                ))}
-            </div>
-            <OrderButton onClick={handleOrderButtonClick} />
+            )}
+            {userId && (
+                <div>
+                    <div className="cart-items">
+                        <div className="cart-item-header">
+                            <p className="column1">Товар</p>
+                            <p className="column2">Цена</p>
+                            <p className="column3">Количество</p>
+                            <p className="column4">Сумма</p>
+                        </div>
+                        {cartItems && cartItems.map((item) => (
+                            <CartItem
+                                key={item.productId}
+                                product={item.product}
+                                quantity={item.quantity}
+                                handleQuantityChange={handleQuantityChange}
+                                handleRemoveFromCart={handleRemoveFromCart}
+                            />
+                        ))}
+                    </div>
+                    <OrderButton onClick={handleOrderButtonClick} />
+                </div>
+            )}
         </div>
     );
 };

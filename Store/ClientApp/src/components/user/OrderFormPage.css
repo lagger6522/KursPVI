@@ -1,25 +1,51 @@
-form {
-    max-width: 400px;
+.order-form-page {
+    max-width: 600px;
     margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+form {
+    display: flex;
+    flex-direction: column;
 }
 
 label {
-    padding-right: 8px;
+    margin-bottom: 10px;
 }
 
 input,
 select {
-    padding: 8px;
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
     box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.isPrivateHouse-label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.isPrivateHouse {
+    margin-left: 8px;
 }
 
 button {
     background-color: #3498db;
     color: #fff;
-    padding: 10px 20px;
+    padding: 12px 20px;
     border: none;
     cursor: pointer;
     font-size: 16px;
+    border-radius: 4px;
 }
 
     button:hover {
@@ -31,20 +57,3 @@ h2 {
     text-align: center;
     margin-bottom: 20px;
 }
-
-.isPrivateHouse-label {
-    display: flex;
-    margin-bottom: 10px;
-}
-
-
-button {
-    background-color: #4caf50;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-
-    button:hover {
-        background-color: #45a049;
-    }
