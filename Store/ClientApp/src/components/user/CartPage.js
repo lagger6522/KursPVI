@@ -24,6 +24,11 @@ const CartPage = () => {
 
     const handleQuantityChange = async (productId, newQuantity) => {
         try {
+            if (newQuantity < 1) {
+                console.warn('Количество товара не может быть меньше 0');
+                return;
+            }
+
             await sendRequest(`/api/Categories/UpdateCartItemQuantity`, 'POST', {
                 userId: userId,
                 productId: productId,
@@ -45,6 +50,7 @@ const CartPage = () => {
             console.error('Ошибка при обновлении количества товара:', error);
         }
     };
+
 
 
     const handleRemoveFromCart = async (productId) => {
