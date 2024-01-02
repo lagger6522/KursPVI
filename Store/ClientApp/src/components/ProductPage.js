@@ -98,6 +98,7 @@ const ProductPage = () => {
 
     return (
         <div className="product-page">
+            {error && <div className="error-message">{error}</div>}
             <div>
                 <label>Сортировка по:</label>
                 <select value={sortOption} onChange={handleSortChange}>
@@ -123,7 +124,7 @@ const ProductPage = () => {
                                 <h5>{product.productName}</h5>
                             </Link>
                             <div>
-                                <span>Оценка: {product.averageRating !== undefined ? product.averageRating.toFixed(1) : 'Нет оценки'}</span>
+                                <span>Оценка: {product.averageRating !== undefined ? product.averageRating.toFixed(2) : 'Нет оценки'}</span>
                                 <span>({product.reviewCount !== undefined ? product.reviewCount : 0} отзыва(ов))</span>
                             </div>
                             <div className="cost">Цена: {product.price} руб.</div>

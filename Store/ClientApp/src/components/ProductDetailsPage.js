@@ -23,7 +23,7 @@ const ProductDetailsPage = () => {
 
         sendRequest(`/api/Categories/GetProductReviews`, 'GET', null, { productId })
             .then((response) => {
-                setReviews(response?.reviews || []);
+                setReviews(response?.reviews);
             })
             .catch((error) => {
                 console.error('Ошибка при загрузке отзывов о товаре:', error);
@@ -47,7 +47,7 @@ const ProductDetailsPage = () => {
         var userName = sessionStorage.getItem("userName");
         var userId = sessionStorage.getItem("userId");
         if (!userName) {
-            setError('Имя пользователя не установлено.');
+            setError('Чтобы отправить отзыв нужно авторизоваться.');
             return;
         }
         if (!rating || !reviewText.trim()) {
@@ -67,12 +67,14 @@ const ProductDetailsPage = () => {
             setError('');
 
             sendRequest(`/api/Categories/GetProductReviews`, 'GET', null, { productId })
-                .then(response => {
-                    setReviews(response);
+                .then((response) => {
+                    setReviews(response?.reviews);
                 })
-                .catch(error => {
+                .catch((error) => {
                     console.error('Ошибка при загрузке отзывов о товаре:', error);
                 });
+
+            
         })
             .catch(error => {
                 console.error('Ошибка при отправке отзыва:', error);
@@ -164,7 +166,7 @@ const ProductDetailsPage = () => {
                     className="review-textarea"
                     placeholder="Введите ваш отзыв"
                     value={reviewText}
-                    onChange={(e) => setReviewText(e.target.value)}
+                    onChange={(e) => setReviewText(e.target.value)} 
                 ></textarea>
                 <button className="submit-review-button" onClick={handleReviewSubmit}>
                     Отправить
