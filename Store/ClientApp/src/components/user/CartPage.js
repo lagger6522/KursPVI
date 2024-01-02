@@ -9,17 +9,14 @@ const CartPage = () => {
     const [cartItems, setCartItems] = useState([]);
     const navigate = useNavigate();
     const userId = sessionStorage.getItem('userId');
+    const [hasItems, setHasItems] = useState(true);
 
     useEffect(() => {
         if (userId) {
-
-            if (!userId) {
-                console.warn('Для просмотра корзины необходимо войти в систему.');
-                return;
-            }
             sendRequest(`/api/Categories/GetCartItems`, 'GET', null, { userId })
                 .then(response => {
                     setCartItems(response);
+                    setHasItems(response.length > 0);
                 })
                 .catch(error => {
                     console.error('Ошибка при загрузке товаров в корзине:', error);
@@ -56,8 +53,6 @@ const CartPage = () => {
         }
     };
 
-
-
     const handleRemoveFromCart = async (productId) => {
         try {
             // Отправляем запрос на сервер для удаления товара из корзины
@@ -69,6 +64,7 @@ const CartPage = () => {
             // Если запрос успешен, обновляем состояние компонента
             const updatedCartItems = cartItems.filter(item => item.product.productId !== productId);
             setCartItems(updatedCartItems);
+            setHasItems(updatedCartItems.length > 0);
 
             // Обновляем данные в localStorage
             localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
@@ -76,7 +72,7 @@ const CartPage = () => {
             console.error('Ошибка при удалении товара из корзины:', error);
         }
     };
-        
+
     const handleOrderButtonClick = () => {
         // Логика оформления заказа
         navigate('/order-form');
@@ -90,7 +86,12 @@ const CartPage = () => {
                     <p>Для просмотра корзины необходимо войти в систему.</p>
                 </div>
             )}
-            {userId && (
+            {userId && !hasItems && (
+                <div className="notification">
+                    <p>Ваша корзина пуста.</p>
+                </div>
+            )}
+            {userId && hasItems && (
                 <div>
                     <div className="cart-items">
                         <div className="cart-item-header">
