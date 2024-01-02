@@ -23,9 +23,6 @@ export class RegisterPage extends Component {
         const { name, value } = event.target;
         this.setState({ [name]: value });
     };
-    componentDidMount() {
-        this.GetAllUsers();
-    }
     handleSubmit = async (event) => {
         event.preventDefault();
 
@@ -139,9 +136,6 @@ export class RegisterPage extends Component {
                     </button>
                     {errorMessage && <p className="error-message">{errorMessage}</p>}
                 </form>
-                
-                {Users.map(n => <p>{JSON.stringify(n)}</p>)}
-                {Users[0]?Users[0].username:null}
             </div>
         );
     }
